@@ -2,7 +2,7 @@
 //
 // Runs in two contexts, both the loop task: paddleProfilesOnInput() from the RF decode (rf_link.cpp, inside
 // rfLinkTask) and paddleProfilesTask() from loop(). No usbd/ISR access, so no locking is needed. Flash writes
-// only ever happen from paddleProfilesTask()/saveCfg(), never from the input path.
+// only ever happen through saveCfg() (queued with requestCfgSave()), never from the input path.
 #include "paddle_profiles.h"
 #include "config.h"
 #include "triton.h"
@@ -60,8 +60,6 @@ struct PpStore {
 };
 static PpStore s_st;
 static bool s_storeDirty = false; // /paddles.bin needs writing
-static unsigned long s_saveAt =
-	0; // deferred saveCfg deadline (0 = nothing pending)
 
 // ---------------------------------------------------------------- feedback buzz sequencer
 #define FB_SHORT_MS 90u
@@ -118,10 +116,9 @@ static void feedbackTask()
 static void markChanged()
 {
 	s_storeDirty = true;
-	// Batch rapid cycling / several assignments into one flash write a few seconds after the last change.
-	s_saveAt = millis() + 3000u;
-	if (!s_saveAt)
-		s_saveAt = 1;
+	// Written at the next quiet moment (input_idle.h), so rapid cycling or several assignments cost one flash
+	// write and it never lands mid-play.
+	requestCfgSave();
 }
 
 void paddleProfilesSaveIfDirty()
@@ -427,8 +424,4 @@ void paddleProfilesTask()
 	unsigned long now = millis();
 	if (s_learnSlot < NSLOT && now - s_learnLastMs >= PP_LEARN_TIMEOUT_MS)
 		learnExit();
-	if (s_saveAt && (long)(now - s_saveAt) >= 0) {
-		s_saveAt = 0;
-		saveCfg(); // also writes /paddles.bin via paddleProfilesSaveIfDirty()
-	}
 }

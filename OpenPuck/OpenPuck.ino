@@ -396,6 +396,7 @@ void loop()
 	ledTask();
 	acc[6] += (uint32_t)(micros() - t);
 	paddleProfilesTask();
+	cfgSaveTask();
 #if OPK_PWR_SWITCH
 	pwrSwitchTask();
 #endif
@@ -440,6 +441,7 @@ void loop()
 	faultDiagSetStage(6);
 	ledTask();
 	paddleProfilesTask();
+	cfgSaveTask();
 #if OPK_PWR_SWITCH
 	pwrSwitchTask();
 #endif

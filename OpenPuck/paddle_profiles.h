@@ -20,13 +20,13 @@
 
 // boot: load /paddles.bin (or seed presets). Call AFTER loadCfg() so g_type[] is already loaded.
 void paddleProfilesLoad();
-// loop context: feedback buzz sequencing, learn-mode timeout, deferred flash save.
+// loop context: feedback buzz sequencing and the learn-mode timeout.
 void paddleProfilesTask();
 // rf_link, once per decoded input report, after g_in[slot] is filled and BEFORE the report is handed to the
 // active controller. May mask g_in[slot] and the raw report (rep) so gesture presses never reach the host.
 void paddleProfilesOnInput(uint8_t slot, uint8_t *rep);
 // Write /paddles.bin if it changed. saveCfg() calls this, so every path that persists the config (mode
-// switch, panel edit) persists the profiles alongside it.
+// switch, panel edit, the queued quiet-moment save) persists the profiles alongside it.
 void paddleProfilesSaveIfDirty();
 // active profile index (0..PP_COUNT-1) for an emulated type, 0xFF for an invalid type
 uint8_t paddleProfileActive(uint8_t et);

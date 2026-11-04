@@ -97,7 +97,8 @@ bool saveRfStartupLastGoodChannel(uint8_t channel)
 	cfgExtWrite(0u, channel);
 	cfgExtWrite(1u, 1u);
 	cfgExtWrite(2u, 1u);
-	saveCfg();
+	// learned while playing: write it at the next quiet moment
+	requestCfgSave();
 	return true;
 }
 
