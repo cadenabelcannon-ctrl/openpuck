@@ -337,6 +337,18 @@
       <div id="typeCfgs"></div>
     </div>
 
+    <div class="card wide" id="shortcutsCard">
+      <h2>Controller shortcuts</h2>
+      <p class="note" style="margin-top:0">Everything below works from the controller alone, with no computer. Hold <strong>all four back paddles</strong>, then press the second button. Profile and layout gestures apply to Xbox, Switch and PlayStation modes; Steam and Lizard modes ignore them.</p>
+      <table class="note" style="border-collapse:collapse;width:100%;margin:0">
+        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + RB</strong></td><td>Next paddle profile. The controller buzzes 1–4 times for the profile number.</td></tr>
+        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + LB</strong></td><td>Previous paddle profile.</td></tr>
+        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + Start (+)</strong></td><td>Paddle-assign mode on/off (long buzz). Tap a paddle (1 buzz), then the button it should act as (2 buzzes). The same paddle twice turns it off (3 buzzes). Closes itself after 30 s idle.</td></tr>
+        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + Select (−)</strong></td><td>Flip Nintendo / Xbox button layout. 2 buzzes = Nintendo, 1 = Xbox. Paddles mapped to face buttons flip with it.</td></tr>
+        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + A / B / X / Y / D-pad</strong></td><td>Switch USB mode (see "Back4 chords" above).</td></tr>
+      </table>
+    </div>
+
     <div class="card" id="lizardCard" style="display:none">
       <h2>Lizard / desktop mapping</h2>
       <p class="note" style="margin-top:0">Keyboard, mouse &amp; media bindings for <strong>Lizard (always)</strong> mode — each row maps a controller input to a desktop action. (Steam-mode seamless lizard, when Steam is closed, keeps the built-in default behavior and is not affected by this map.) Edits apply after <strong>Save to device</strong>.</p>
@@ -439,7 +451,7 @@
       <div class="card fwupcard" id="relCard">
         <h2>Update from a release</h2>
         <div class="row" style="margin-top:0">
-          <span class="note" style="flex:1;margin:0">Official builds from <a href="https://github.com/safijari/openpuck/releases" target="_blank" rel="noopener" style="color:var(--acc2)">github.com/safijari/openpuck/releases</a> &nbsp;·&nbsp; installed: <b id="updInstalled" style="color:var(--acc)">—</b></span>
+          <span class="note" style="flex:1;margin:0">Custom builds from <a href="https://github.com/cadenabelcannon-ctrl/openpuck/releases" target="_blank" rel="noopener" style="color:var(--acc2)">github.com/cadenabelcannon-ctrl/openpuck/releases</a> &nbsp;·&nbsp; installed: <b id="updInstalled" style="color:var(--acc)">—</b></span>
           <button id="relRefresh">Refresh</button>
         </div>
         <div id="relList" class="note" style="margin:0">loading…</div>
@@ -669,12 +681,13 @@ let lizardBusy = false;
 let lizardLoaded = false;  // one-shot: the lizard map is fetched lazily, only once the connected puck proves it speaks v16+
 const BACK_LABELS = ["L4 (back upper-left)","R4 (back upper-right)","L5 (back lower-left)","R5 (back lower-right)"];
 const typeEls = []; // one entry per TYPE_DEFS: {sec, tab, activeDot, back[], qam, abSwap, pad, led, ledV, rumble, padStick[]}
-// Trackpad -> joystick mapping (firmware PS_OFF/PS_LEFT/PS_RIGHT). Field id = PAD_STICK_FIELD0 + et*2 + pad
+// Trackpad -> joystick mapping (firmware PS_OFF/PS_LEFT/PS_RIGHT, plus PS_DPAD on custom builds: clicking the
+// pad presses D-pad directions). Field id = PAD_STICK_FIELD0 + et*2 + pad
 // (pad 0 = left trackpad, 1 = right). While mapped and touched the pad drives that stick; on release the
 // stick re-centers, and an untouched mapped pad leaves the physical stick in control.
 const PAD_STICK_FIELD0 = 80;
-const PAD_STICK_OPTS = [[0,"Off (touchpad)"],[1,"Left stick"],[2,"Right stick"]];
-const PAD_STICK_LABELS = ["Left trackpad \u2192 stick","Right trackpad \u2192 stick"];
+const PAD_STICK_OPTS = [[0,"Off (touchpad)"],[1,"Left stick"],[2,"Right stick"],[3,"D-pad (click)"]];
+const PAD_STICK_LABELS = ["Left trackpad acts as","Right trackpad acts as"];
 function mkSelect(def, includeNone){
   const sel=document.createElement("select");
   if(includeNone){ const o=document.createElement("option"); o.value=0; o.textContent="— none —"; sel.appendChild(o); }
@@ -2624,7 +2637,9 @@ $("#uf2Flash").onclick=()=>{
 // NOT, so the release workflow mirrors every OpenPuck .uf2 onto the repo's orphan `firmware` branch and the
 // panel fetches it from raw.githubusercontent.com (which is CORS-clean). Fallbacks: the API asset endpoint
 // (in case GitHub ever fixes its CDN), then a plain new-tab download + the local-file card.
-const REL_REPO="safijari/openpuck";
+// Custom build line: releases (and the firmware mirror) come from this fork, so "update from a release"
+// never offers official firmware that would drop the custom features.
+const REL_REPO="cadenabelcannon-ctrl/openpuck";
 let relCache=null;
 // firmware-mirror manifest: asset name -> {panelUpdate}. Written by the release workflow, which scans each
 // .uf2 for the FWUP_TAG capability string. null = manifest unreachable (then releases just go unbadged; the
