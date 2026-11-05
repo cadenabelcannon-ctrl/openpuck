@@ -14,6 +14,7 @@
 #include "paddle_profiles.h" // paddleProfilesOnInput()
 #include "hitch_policy.h"
 #include "input_idle.h" // inputIdleNote()
+#include "pad_dpad.h" // padDpadApply()
 #include <Adafruit_TinyUSB.h>
 #include <Arduino.h>
 #include <string.h>
@@ -3746,6 +3747,8 @@ uint8_t rfConnTx(uint8_t ch, uint8_t s1, const uint8_t *payload, uint8_t plen,
 						}
 						// Paddle profiles: back4+RB/LB/Start gestures + paddle-assign mode. Masks its own buttons out of
 						// g_in and rep (assign mode blanks all input) before any mode builder sees this report.
+						padDpadApply((uint8_t)g_curSlot,
+							     (uint8_t *)rep);
 						paddleProfilesOnInput(
 							(uint8_t)g_curSlot,
 							(uint8_t *)rep);

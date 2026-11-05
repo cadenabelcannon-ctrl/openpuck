@@ -101,7 +101,7 @@ static bool boardCommand(uint8_t op)
 //                [v14/v17: p[181] legacy relay field, now Steam Machine emulation toggle (0xEE=on)]
 //                [v18: p[182..185] chordDpad left/up/right/down (back4+D-pad mode assignments)]
 //                [v19: p[186] swGyroLegacy (Switch Pro gyro mapping: 0 = corrected, 1 = legacy/pre-#189)]
-//                [v20: p[187..194] per-type trackpad->stick map, 4x2B {left pad, right pad} (PS_OFF/LEFT/RIGHT)]
+//                [v20: p[187..194] per-type trackpad->stick map, 4x2B {left pad, right pad} (PS_OFF/LEFT/RIGHT/DPAD)]
 //                [v21: p[53] rumble strength as PERCENT/2 (field 22, revived); p[195] rumble style
 //                 (field 39, RUMBLE_STYLE_* in haptics.h)]
 //                [v22: p[196] RF recovery status/journal transport capability marker (0x52)]
@@ -1226,7 +1226,7 @@ void webusbPoll()
 					break;
 
 				// 80..87: per-type trackpad->stick mapping, field = 80 + et*2 + pad
-				// (pad 0 = left, 1 = right; value PS_OFF/PS_LEFT/PS_RIGHT).
+				// (pad 0 = left, 1 = right; value PS_OFF/PS_LEFT/PS_RIGHT/PS_DPAD).
 				// Must stay clear of the per-type cfg range 40..40+ET_COUNT*9-1
 				// (40..75), which is claimed before this switch runs.
 				case 80:
