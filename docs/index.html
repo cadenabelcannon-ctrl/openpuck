@@ -123,6 +123,59 @@
   #updFill.bad{background:var(--bad)}
   @keyframes updslide{to{background-position:34px 0}}
   @media(prefers-reduced-motion:reduce){#updFill.pulse{animation:none}}
+  /* ---- overview, section links, paddle profiles, connection quality, save toast ---- */
+  .card{scroll-margin-top:64px}
+  body.dongle #jumpNav{display:none}
+  .jump{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 16px}
+  .jump a{font-size:12px;color:var(--mut);text-decoration:none;padding:4px 11px;border:1px solid #272d3d;border-radius:99px;background:#151925}
+  .jump a:hover{color:var(--fg);border-color:var(--acc2)}
+  #qualityCard .statgrid{grid-template-columns:repeat(auto-fit,minmax(128px,1fr))}
+  .glance{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  .glance .stat .v{font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat .s{color:var(--mut);font-size:11.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .v.good{color:var(--acc)} .v.warn{color:var(--warn)} .v.bad{color:var(--bad)} .v.dim{color:var(--mut)}
+  input[type=text]{background:#0e1017;color:var(--fg);border:1px solid #313a4f;border-radius:8px;padding:8px 10px;font:inherit;flex:1;min-width:160px}
+  input[type=text]:focus,select:focus{outline:none;border-color:var(--acc2)}
+  .prof-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+  .prof{background:#0e1017;border:1px solid #232a3a;border-radius:10px;padding:12px;transition:border-color .2s}
+  .prof.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px rgba(91,214,160,.18)}
+  .prof-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;min-height:28px}
+  .prof-head b{font-size:14px}
+  .prof-head button{padding:4px 11px;font-size:12px}
+  .pads{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+  .pads label{display:block;color:var(--mut);font-size:11px;margin:0 0 3px;white-space:nowrap}
+  .pads select{width:100%;min-width:0;padding:5px 6px;font-size:13px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 0}
+  .chip{font-size:12px;padding:3px 10px;border-radius:99px;background:#151925;border:1px solid #272d3d;color:var(--mut)}
+  .chip.ok{color:var(--acc);border-color:#1f4a37} .chip.warn{color:var(--warn);border-color:#5a4718}
+  .spark{display:flex;align-items:flex-end;gap:2px;height:58px;padding:6px 8px;background:#0e1017;border:1px solid #232a3a;border-radius:8px;margin-top:12px}
+  .spark i{flex:1;background:var(--acc2);border-radius:2px 2px 0 0;min-height:2px;opacity:.9}
+  .spark i.z{background:#232a3a}
+  .spark i.hi{background:var(--bad)}
+  .sparklbl{display:flex;justify-content:space-between;color:var(--mut);font-size:11px;margin-top:3px}
+  table.mv{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  table.mv th{text-align:left;color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px 6px 0;border-bottom:1px solid #272d3d;white-space:nowrap}
+  table.mv td{padding:7px 10px 7px 0;border-bottom:1px solid #1f2433;font-variant-numeric:tabular-nums;white-space:nowrap}
+  table.mv td.empty{color:var(--mut);white-space:normal}
+  table.mv button{padding:2px 9px;font-size:12px}
+  .tblwrap{overflow-x:auto}
+  details.adv{margin-top:14px;border-top:1px solid #272d3d;padding-top:10px}
+  details.adv>summary{cursor:pointer;color:var(--acc2);font-size:13px;list-style:none}
+  details.adv>summary::-webkit-details-marker{display:none}
+  details.adv>summary::before{content:"\25B8 "} details.adv[open]>summary::before{content:"\25BE "}
+  details.adv[open]>summary{margin-bottom:10px}
+  #toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,16px);opacity:0;background:#143626;color:var(--acc);border:1px solid #1f4a37;padding:7px 16px;border-radius:99px;font-size:13px;font-weight:600;pointer-events:none;transition:opacity .2s,transform .2s;z-index:120}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+  #toast.bad{background:#3a1822;color:var(--bad);border-color:#7a2233}
+  @media(prefers-reduced-motion:reduce){#toast{transition:none}}
+  @media(max-width:600px){
+    .wrap{padding:14px 12px} .card{padding:14px} .row label{flex:1 1 100%}
+    /* the maintenance buttons wrap to three rows on a phone: don't pin them over the page */
+    .topbar{position:static;padding:8px 12px;gap:8px} .topbar button{padding:6px 10px;font-size:13px}
+    .card{scroll-margin-top:8px}
+    .glance,#qualityCard .statgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .stat .v{font-size:16px}
+  }
 </style>
 </head>
 <body>
@@ -152,7 +205,20 @@
     </div>
 
     <div id="tabMain">
+    <nav class="jump" id="jumpNav" aria-label="Sections">
+      <a href="#glanceCard">Overview</a><a href="#modeCard">USB mode</a><a href="#qualityCard" data-cap="2">Connection quality</a><a href="#linkCard">Link status</a><a href="#mappingCard">Button mapping</a><a href="#profilesCard" data-cap="1">Paddle profiles</a><a href="#shortcutsCard">Shortcuts</a><a href="#backupCard">Backup</a>
+    </nav>
     <div class="cards">
+    <div class="card wide" id="glanceCard">
+      <h2>At a glance</h2>
+      <div class="glance">
+        <div class="stat"><div class="k">Mode</div><div class="v" id="gMode">—</div><div class="s" id="gModeS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Controller</div><div class="v" id="gCtl">—</div><div class="s" id="gCtlS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Signal</div><div class="v" id="gSig">—</div><div class="s" id="gSigS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Stutters / min</div><div class="v" id="gStut">—</div><div class="s" id="gStutS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Paddle profile</div><div class="v" id="gProf">—</div><div class="s" id="gProfS">&nbsp;</div></div>
+      </div>
+    </div>
     <div class="card wide" id="pairedCard" style="display:none">
       <h2>Paired pucks</h2>
       <div class="row" style="gap:10px;align-items:center;margin-bottom:4px">
@@ -172,7 +238,7 @@
       <p class="note">This section reflects the connected puck. Reconnect after flashing or changing modes to verify what is currently running.</p>
     </div>
 
-    <div class="card">
+    <div class="card" id="modeCard">
       <h2>USB mode</h2>
       <div class="modes" style="flex-wrap:wrap">
         <button data-mode="0" class="modebtn">Steam (puck)</button>
@@ -219,7 +285,43 @@
       <p id="dpadOld" class="note hide">This puck's firmware predates the D-pad chords — update it to configure them.</p>
     </div>
 
-    <div class="card wide">
+    <div class="card wide hide" id="qualityCard">
+      <h2>Connection quality</h2>
+      <p class="note" style="margin-top:0">How smooth the controller feels, in numbers. A <strong>stutter</strong> is a gap of 40 ms or more between fresh reports from the controller (a few frames of frozen input); a <strong>freeze</strong> is 100 ms or more. Rates count only the time a controller was connected, so different boards, rooms and sessions compare fairly.</p>
+      <div class="slot-tabs" id="lsSlotTabs" style="display:none"></div>
+      <div class="statgrid">
+        <div class="stat"><div class="k">Stutters / min</div><div class="v" id="lsRate">—</div><div class="s">last minute</div></div>
+        <div class="stat"><div class="k">Freezes / min</div><div class="v" id="lsFrz">—</div><div class="s">100 ms or longer</div></div>
+        <div class="stat"><div class="k">Longest gap</div><div class="v" id="lsWorst">—</div><div class="s">last minute</div></div>
+        <div class="stat"><div class="k">Reports delivered</div><div class="v" id="lsDeliv">—</div><div class="s">last minute</div></div>
+        <div class="stat"><div class="k">Signal</div><div class="v" id="lsSig">—</div><div class="s" id="lsSigS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Channel</div><div class="v" id="lsCh">—</div><div class="s" id="lsChS">&nbsp;</div></div>
+      </div>
+      <div class="spark" id="lsSpark" role="img" aria-label="Stutters over the last 5 minutes"></div>
+      <div class="sparklbl"><span>5 min ago</span><span>stutters per 10 s</span><span>now</span></div>
+      <div class="colhead" style="margin-top:18px">Since reset</div>
+      <div class="statgrid" style="margin-top:6px">
+        <div class="stat"><div class="k">Average</div><div class="v" id="lsAvg">—</div><div class="s">per minute connected</div></div>
+        <div class="stat"><div class="k">Stutters</div><div class="v" id="lsTot">—</div><div class="s" id="lsTotS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Connected</div><div class="v" id="lsConn">—</div><div class="s" id="lsConnS">&nbsp;</div></div>
+        <div class="stat"><div class="k">Longest gap</div><div class="v" id="lsWorstTot">—</div><div class="s">since reset</div></div>
+      </div>
+      <div class="chips" id="lsPolicy"></div>
+      <div class="colhead" style="margin-top:18px">Channel moves</div>
+      <div class="tblwrap"><table class="mv"><thead><tr><th>When</th><th>Move</th><th>Why</th><th>Result</th><th>Stutters/min before</th><th>After</th></tr></thead><tbody id="lsMoves"></tbody></table></div>
+      <p class="note"><strong>Stutter fix</strong> = the hitch-aware logic in this build moved the link; <strong>Recovery / manual</strong> = the stock total-failure recovery, a manual hop, or a journal build. <em>After</em> fills in one minute after the move.</p>
+      <div class="colhead" style="margin-top:18px">Compare runs</div>
+      <div class="row" style="margin:8px 0 0;gap:8px">
+        <input type="text" id="lsLabel" maxlength="40" placeholder="Name this run, e.g. Pro Micro · couch" aria-label="Run name">
+        <button id="lsSave" class="primary">Save this run</button>
+        <button id="lsReset">Reset counters</button>
+      </div>
+      <div class="tblwrap"><table class="mv"><thead><tr><th>Run</th><th>Date</th><th>Connected</th><th>Stutters/min</th><th>Freezes/min</th><th>Longest gap</th><th>Moves</th><th></th></tr></thead><tbody id="lsRuns"></tbody></table></div>
+      <div class="row" style="margin:10px 0 0;gap:8px"><button id="lsCopy">Copy table</button>
+        <span class="note" style="flex:1;margin:0">To compare boards: reset, play 15+ minutes in your usual spot, save the run; swap boards and repeat. Saved runs stay in this browser.</span></div>
+    </div>
+
+    <div class="card wide" id="linkCard">
       <h2>Link status</h2>
 
       <!-- Per-controller tabs: visible only when 2+ controllers are bonded -->
@@ -235,6 +337,7 @@
         <div class="stat"><div class="k">Fails/s (crc·noRx·relay)</div><div class="v" id="stSlotFail">—</div></div>
       </div>
 
+      <details class="adv" id="linkAdv"><summary>Advanced diagnostics</summary>
       <!-- Global stats (sums over ALL controllers; the per-slot grid above shows the selected controller's own rates) -->
       <div class="statgrid">
         <div class="stat"><div class="k">Delivered (all)</div><div class="v" id="stRate">—</div></div>
@@ -257,6 +360,7 @@
       <p class="note" style="margin-top:8px"><strong>IMU (raw):</strong> <span id="stImu" style="font-family:ui-monospace,Menlo,monospace">—</span><br>
         Raw SC2 accel (before scaling). This controller is a ±2 g sensor (~16384 = 1 g); the Switch report divides it by 4 to present the genuine ±8 g (4096 = 1 g) scale so the console's gravity-correction engages and the gyro stops drifting.</p>
       <p class="note logonly">Polls/s ≈ 250 expected; it's capped by Loop period (≈4000 µs needed). "Slowest stage" is the loop section eating the most time per iteration.</p>
+      </details>
       <div class="row debugonly" style="margin:14px 0 0;border-top:1px solid #272d3d;padding-top:14px"><button id="hapClear">Clear stuck buzz</button>
         <span class="note" style="flex:1">If the controller's haptics get stuck/buzzing, this re-inits them (same as pressing Steam).</span>
       </div>
@@ -331,10 +435,18 @@
       <p id="rumbleOld" class="note hide">This puck's firmware predates the rumble-shaping settings — update it to configure them.</p>
     </div>
 
-    <div class="card wide">
+    <div class="card wide" id="mappingCard">
       <h2>Button mapping</h2>
       <p class="note" style="margin-top:0">Separate mappings per emulated controller type — each only offers targets that exist on that controller. The type matching the current mode is highlighted. Steam &amp; Lizard are native puck modes (Steam does its own remapping) and aren't configured here.</p>
       <div id="typeCfgs"></div>
+    </div>
+
+    <div class="card wide hide" id="profilesCard">
+      <h2>Paddle profiles</h2>
+      <p class="note" style="margin-top:0">Four back-paddle layouts for each controller type. The green one is in use; switch from the controller with <strong>paddles + RB / LB</strong>, or press <em>Use this</em>. Each paddle box sits where the paddle is on the controller. Changes save to the puck straight away.</p>
+      <div class="slot-tabs" id="profTabs"></div>
+      <div class="prof-grid" id="profGrid"></div>
+      <p class="note" id="profNote"></p>
     </div>
 
     <div class="card wide" id="shortcutsCard">
@@ -364,7 +476,7 @@
 
     <div class="card" id="backupCard">
       <h2>Backup &amp; clone</h2>
-      <p class="note" style="margin-top:0">Save this puck's controller pairings <em>and</em> every setting to a file, then restore them onto another puck. The other puck becomes a clone — any controller paired to this one connects to it with <strong>no re-pairing</strong>. (Also a plain backup: re-import after a factory erase to get everything back.)</p>
+      <p class="note" style="margin-top:0">Save this puck's controller pairings <em>and</em> every setting (all four paddle profiles per controller type included) to a file, then restore them onto another puck. The other puck becomes a clone — any controller paired to this one connects to it with <strong>no re-pairing</strong>. (Also a plain backup: re-import after a factory erase to get everything back.)</p>
       <div class="row" style="margin:0;flex-wrap:wrap">
         <button id="backupExport" class="primary">Export to file…</button>
         <button id="backupImport">Import from file…</button>
@@ -737,6 +849,9 @@ function setTab(et){
       sel.addEventListener("change",()=>setField(40+et*9+i, +sel.value));
       rec.back.push(sel);
     }
+    { const h=document.createElement("p"); h.className="note hide"; h.style.margin="4px 0 8px";
+      h.innerHTML='Back paddles are set per profile: see <a href="#profilesCard" style="color:var(--acc2)">Paddle profiles</a>.';
+      sec.appendChild(h); rec.backHint=h; }
     // QAM
     { const row=document.createElement("div"); row.className="row";
       const lab=document.createElement("label"); lab.textContent="QAM (3 dots)"; row.appendChild(lab);
@@ -1255,6 +1370,7 @@ async function openDevice(d){
     // 0x11, and readLizard()'s blocking transferIn would then hang forever -- wedging the status poll the
     // firmware-update gate depends on. So we never send 0x11 until a status blob proves the puck speaks v16.
     lizardLoaded=false;
+    opkCaps=0; profData=null; profEt=-1; profBuiltEt=-1; lsData=null; lsSlot=-1; lsHist=[]; lsPrev=null; pollTick=0;
     startPolling();
     // GitHub releases are PUCK firmware; skip the fetch for a dongle (it flashes via the local-file card).
     if(!isDongle) loadReleases(false); // background, cached: feeds the update-available notice + pre-warms the update tab
@@ -1611,18 +1727,19 @@ function applyBlob(p){
   $("#dpadChords").classList.toggle("hide", !dpadCap);
   $("#dpadOld").classList.toggle("hide", dpadCap);
   if(dpadCap) for(const sel of document.querySelectorAll("select.chordD")){ if(document.activeElement!==sel) sel.value=chordD[+sel.dataset.i]; }
+  opkAfterBlob(p, mode);
 }
 function fmtSlider(id,v){ return id==="hapBlockS" ? v+" s" : ""+v; }
 function setSlider(id,v){ const el=$("#"+id); if(document.activeElement!==el){ el.value=v; } $("#"+id+"V").textContent=fmtSlider(id,el.value); }
 
 let inflight=false;
 async function refresh(){
-  if(!dev||inflight||capturing||backupBusy||flightBusy||lizardBusy||rfBusy) return; inflight=true;
+  if(!dev||inflight||xBusy||capturing||backupBusy||flightBusy||lizardBusy||rfBusy) return; inflight=true;
   // try/finally: an exception anywhere in here (applyBlob included) must never leave inflight latched true --
   // that would silently kill all future polls and read as a fake "heartbeat lost".
   try{
     if(isDongle){ await send([0x01]); const p=await readFrame(0xAC, 3, 256); if(p) applyDongleStatus(p); }
-    else { await send([0x01]); const p=await readBlob(); if(p) applyBlob(p); }
+    else { await send([0x01]); const p=await readBlob(); if(p) applyBlob(p); await opkPollExtras(); }
   }
   catch(e){ log("refresh err: "+e.message); }
   finally{ inflight=false; }
@@ -1697,7 +1814,7 @@ function applyDeviceProfile(){
 // normal 0x02 setters, then sends the 0x0D bond-import which writes the pairings, applies the mode and reboots.
 function hexEnc(arr){ return [...arr].map(x=>x.toString(16).padStart(2,"0")).join(""); }
 function hexDec(h){ const a=[]; if(!h) return a; for(let i=0;i+1<h.length;i+=2) a.push(parseInt(h.substr(i,2),16)); return a; }
-function buildBackup(p, bp){
+function buildBackup(p, bp, prof){
   const mask=bp[1], bonds=[];
   for(let s=0;s<4;s++){ const rec=bp.slice(2+s*24, 2+s*24+24);
     bonds.push({slot:s, used:!!((mask>>s)&1), rec:hexEnc(rec)}); }
@@ -1720,6 +1837,8 @@ function buildBackup(p, bp){
   // map snapshot would be empty, which would incorrectly clear bindings on restore.
   if(lizardLoaded && lizardCapable() && !lizardBusy)
     cfg.lizardMap=lizardBindings.map(b=>({outType:b.outType,od:b.od.slice(),trig:b.trig>>>0,hold:b.hold>>>0}));
+  // every paddle profile of every type, and which one each type has active (custom firmware, 0xB4)
+  if(prof) cfg.profiles={active:prof.active.slice(), back:prof.back.map(t=>t.map(c=>c.slice()))};
   return { magic:"openpuck-backup", version:(cfg.lizardMap?2:1), bonds, config:cfg };
 }
 function downloadBackup(obj){
@@ -1741,10 +1860,13 @@ async function exportBackup(){
     let bp=null;
     for(let t=0; t<8 && !bp; t++) bp=await readFrame(0xA7, 2+4*24);
     if(!bp){ log("export: no bond data (firmware too old for 0x09 export — reflash)"); return; }
-    const backup=buildBackup(lastP, bp);
+    let prof=null;
+    if(opkCaps&CAP_PROFILES){ await send([0x26]); prof=await readProfiles(); if(!prof){ log("export: couldn't read the paddle profiles — retry"); return; } }
+    const backup=buildBackup(lastP, bp, prof);
     downloadBackup(backup);
     const n=backup.bonds.filter(b=>b.used).length;
-    log("exported backup — "+n+" bonded controller slot(s) + all settings");
+    log("exported backup — "+n+" bonded controller slot(s) + all settings"+(prof?" + all paddle profiles":""));
+    toast("Backup saved");
   } finally { backupBusy=false; }
 }
 async function importBackup(file){
@@ -1767,7 +1889,10 @@ async function importBackup(file){
   const lizardN=(Array.isArray(c.lizardMap) && lizardCapable())?Math.min(c.lizardMap.length,LZ_MAX):0;
   const baseN=6 + (Array.isArray(c.chordD)?4:0) + (c.swGyroLegacy!==undefined?1:0);
   const padStickN=Array.isArray(c.types)?c.types.slice(0,typeN).filter(t=>Array.isArray(t.padStick)).length*2:0;
-  const total=baseN + typeN*9 + padStickN + lizardN + 4 + 1;
+  const prof=c.profiles, profOK=!!(prof && Array.isArray(prof.back) && Array.isArray(prof.active) && (opkCaps&CAP_PROFILES));
+  const profEts=profOK?Math.min(prof.back.length,prof.active.length,TYPE_DEFS.length):0;
+  const profN=profOK?prof.back.slice(0,profEts).reduce((a,t)=>a+(Array.isArray(t)?Math.min(t.length,4):0),0)+profEts:0;
+  const total=baseN + typeN*9 + padStickN + profN + lizardN + 4 + 1;
   let step=0, stage="";
   const tick=()=>modalStage(stage, Math.min(99,Math.floor(step*100/total)));
   try{
@@ -1809,6 +1934,18 @@ async function importBackup(file){
         if(Array.isArray(t.padStick)){ await sf(PAD_STICK_FIELD0+et*2, t.padStick[0]); await sf(PAD_STICK_FIELD0+et*2+1, t.padStick[1]); } }
       log("settings replayed ("+(baseN+typeN*9)+" fields)");
     } else { log("settings replayed ("+baseN+" fields — no per-type config in this backup)"); }
+    // all paddle profiles + which is active per type. Runs after the per-type block (which set the then-active
+    // profile), so these land on top; each write answers with a 0xB4 frame we read to keep the pipe in step.
+    if(profOK){
+      stage="Restoring paddle profiles"; tick();
+      const wp=async(bytes)=>{ await send(bytes); await readProfiles(); step++; tick(); };
+      for(let et=0; et<profEts; et++){ const t=Array.isArray(prof.back[et])?prof.back[et]:[];
+        for(let pr=0; pr<Math.min(t.length,4); pr++){
+          const codes=(Array.isArray(t[pr])?t[pr]:[]).slice(0,4).map(x=>(x|0)&0xff);
+          if(codes.length===4 && codes.every(x=>x<=20)) await wp([0x27,et,pr,...codes]); else { step++; tick(); } } }
+      for(let et=0; et<profEts; et++) await wp([0x28,et,(prof.active[et]|0)&3]);
+      log("paddle profiles restored ("+profEts+" types × 4)");
+    } else if(prof){ log("this backup has paddle profiles, but the connected puck's firmware can't store them — restored the active layouts only"); }
     // restore the lizard map if the backup includes it (version 2+) and the puck speaks v16+.
     // pre-lizard-map backups simply lack c.lizardMap; skip silently so they still import cleanly.
     if(lizardN){
@@ -1982,7 +2119,8 @@ async function cloneWrite(){
   }
 }
 async function setField(field,value){
-  await send([0x02, field, value&0xff]); const p=await readBlob(); if(p) applyBlob(p);
+  await send([0x02, field, value&0xff]); const p=await readBlob();
+  if(p){ applyBlob(p); toast("Saved"); }
 }
 function fmtCapEntry(e,maxMs){
   const hex=e.bytes.map(x=>x.toString(16).padStart(2,"0")).join(" ");
@@ -2154,6 +2292,291 @@ async function stopCapture(){
   $("#capStart").disabled=false; $("#capStop").disabled=true;
   renderCap(); log(`capture stopped — ${capLines.length} entries`);
 }
+// ===================== Paddle profiles, connection quality, overview =====================
+// Custom firmware appends a capability byte to the status blob (firmware p[197] -> JS p[195]); upstream builds
+// don't, so on those none of this shows and none of these opcodes are ever sent (an unanswered request would
+// block the shared IN pipe).
+const CAP_PROFILES=0x01, CAP_STATS=0x02;
+let opkCaps=0, xBusy=false, pollTick=0, lastMode=-1;
+let profData=null, profEt=-1, profBuiltEt=-1, profCards=[];
+let lsData=null, lsSlot=-1, lsHist=[], lsPrev=null;
+const PADDLE_POS=[["L4","upper left"],["R4","upper right"],["L5","lower left"],["R5","lower right"]];
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const u16=(p,o)=>p[o]|(p[o+1]<<8), u32=(p,o)=>(p[o]|(p[o+1]<<8)|(p[o+2]<<16)|(p[o+3]<<24))>>>0;
+function toast(msg,bad){
+  const t=$("#toast"); if(!t) return;
+  t.textContent=msg; t.classList.toggle("bad",!!bad); t.classList.add("show");
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove("show"),1500);
+}
+function setV(id,text,cls){ const el=$("#"+id); if(!el) return; el.textContent=text; el.className="v"+(cls?" "+cls:""); }
+// One request/reply with the status poll paused: they share the bulk pipe, and a reply read by the wrong
+// reader would shift every later read by one frame.
+async function xchg(fn){
+  while(xBusy) await sleep(10);
+  xBusy=true;
+  try{ await waitIdle(); if(!dev) return null; return await fn(); }
+  catch(e){ log("exchange err: "+e.message); return null; }
+  finally{ xBusy=false; }
+}
+
+// ---- paddle profiles (0x26 get, 0x27 set one, 0x28 make active; reply 0xB4) ----
+function parseProfiles(f){
+  if(!f || f[0]!==1) return null;
+  const n=f[1], ets=f[2];
+  if(n<1 || ets<1 || f.length<3+ets+ets*n*4) return null;
+  const active=[...f.slice(3,3+ets)], back=[];
+  for(let et=0;et<ets;et++){
+    const t=[]; for(let p=0;p<n;p++){ const q=3+ets+(et*n+p)*4; t.push([...f.slice(q,q+4)]); }
+    back.push(t);
+  }
+  return {n, active, back};
+}
+async function readProfiles(){ return parseProfiles(await readFrame(0xB4,7)); }
+async function profExchange(bytes, okMsg){
+  const d=await xchg(async()=>{ await send(bytes); return await readProfiles(); });
+  if(d){ profData=d; renderProfiles(); toast(okMsg); }
+  else { toast("Not saved — try again",true); }
+}
+const profSet=(et,p,codes)=>profExchange([0x27,et,p,...codes],"Saved");
+const profSelect=(et,p)=>profExchange([0x28,et,p],"Profile "+(p+1)+" in use");
+function codeLabel(def,c){ return c ? (def.labels[c]||("#"+c)).replace(/^D-pad (Up|Down|Left|Right)$/,(m,d)=>"D-pad "+({Up:"↑",Down:"↓",Left:"←",Right:"→"})[d]).replace(" / Screenshot","") : "off"; }
+function renderProfiles(){
+  if(!profData) return;
+  const etNow=etypeForMode(lastMode);
+  if(profEt<0) profEt=etNow>=0?etNow:0;
+  const bar=$("#profTabs");
+  if(bar.childElementCount!==TYPE_DEFS.length){
+    bar.innerHTML="";
+    TYPE_DEFS.forEach((def,et)=>{ const b=document.createElement("button"); b.className="slot-tab";
+      b.onclick=()=>{ profEt=et; renderProfiles(); }; bar.appendChild(b); });
+  }
+  [...bar.children].forEach((b,et)=>{
+    b.classList.toggle("active",et===profEt);
+    b.innerHTML=TYPE_DEFS[et].name+(et===etNow?'<span style="color:var(--acc);font-size:11px"> ●</span>':'')
+      +'<span style="color:var(--mut);font-weight:400"> P'+((profData.active[et]|0)+1)+'</span>';
+    b.title=(et===etNow?"In use now · ":"")+"Profile "+((profData.active[et]|0)+1)+" active";
+  });
+  const grid=$("#profGrid"), def=TYPE_DEFS[profEt];
+  if(profBuiltEt!==profEt || profCards.length!==profData.n){
+    grid.innerHTML=""; profCards=[];
+    for(let p=0;p<profData.n;p++){
+      const card=document.createElement("div"); card.className="prof";
+      const head=document.createElement("div"); head.className="prof-head";
+      const name=document.createElement("b"); name.textContent="Profile "+(p+1);
+      const right=document.createElement("span");
+      head.append(name,right); card.appendChild(head);
+      const pads=document.createElement("div"); pads.className="pads";
+      const sels=[];
+      for(let i=0;i<4;i++){
+        const cell=document.createElement("div");
+        const lab=document.createElement("label"); lab.textContent=PADDLE_POS[i][0]+" · "+PADDLE_POS[i][1];
+        const sel=mkSelect(def,true); sel.options[0].textContent="Off";
+        // short names so they fit the half-width boxes
+        for(const o of sel.options) o.textContent=o.textContent.replace(/^D-pad Up$/,"D-pad ↑").replace(/^D-pad Down$/,"D-pad ↓")
+          .replace(/^D-pad Left$/,"D-pad ←").replace(/^D-pad Right$/,"D-pad →").replace(" / Screenshot","");
+        sel.setAttribute("aria-label","Profile "+(p+1)+" "+PADDLE_POS[i][0]+" paddle");
+        lab.htmlFor=sel.id="prof"+p+"_"+i;
+        sel.addEventListener("change",()=>{
+          const codes=profData.back[profEt][p].slice(); codes[i]=+sel.value;
+          profSet(profEt,p,codes);
+        });
+        cell.append(lab,sel); pads.appendChild(cell); sels.push(sel);
+      }
+      card.appendChild(pads); grid.appendChild(card);
+      profCards.push({card,right,sels,state:""});
+    }
+    profBuiltEt=profEt;
+  }
+  profCards.forEach((r,p)=>{
+    const on=(profData.active[profEt]===p), live=on && profEt===etNow;
+    r.card.classList.toggle("on",on);
+    const state=on?(live?"live":"on"):"off";
+    if(r.state!==state){
+      r.state=state; r.right.innerHTML="";
+      if(on){ const pill=document.createElement("span"); pill.className="pill up"; pill.textContent=live?"In use":"Active"; r.right.appendChild(pill); }
+      else { const b=document.createElement("button"); b.textContent="Use this"; b.onclick=()=>profSelect(profEt,p); r.right.appendChild(b); }
+    }
+    r.sels.forEach((s,i)=>{ if(document.activeElement!==s) s.value=profData.back[profEt][p][i]; });
+  });
+  $("#profNote").textContent = profEt===etNow ? "" :
+    ("These are the "+def.name+" profiles. "+(etNow>=0 ? ("The puck is in "+TYPE_DEFS[etNow].name+" mode right now, so they")
+      : "The current mode doesn't use paddle profiles (Steam, Lizard, DirectInput and SInput handle paddles themselves), so they")
+     +" take effect the next time you use a "+def.name+" mode.");
+  updateGlance();
+}
+
+// ---- connection quality (0x29 get, 0x2A reset; reply 0xB5) ----
+function parseStats(f){
+  if(!f || f[0]!==1 || f.length<110) return null;
+  const d={ch:f[1], flags:f[2], futile:f[3], recent:f[4], since:u32(f,5), slots:[], moves:[]};
+  for(let k=0;k<4;k++){ const b=9+k*25;
+    d.slots.push({bonded:!!(f[b]&1), up:!!(f[b]&2), rssi:f[b+1], conn60:f[b+2], st60:u16(f,b+3), fz60:u16(f,b+5),
+      worst60:u16(f,b+7), deliv:u16(f,b+9), totSt:u32(f,b+11), totFz:u32(f,b+15), totConn:u32(f,b+19), totWorst:u16(f,b+23)}); }
+  for(let i=0;i<f[109] && 110+i*11+11<=f.length;i++){ const b=110+i*11;
+    d.moves.push({age:u16(f,b), from:f[b+2], to:f[b+3], cause:f[b+4]&0x7f, ok:!!(f[b+4]&0x80),
+      before:u16(f,b+5), beforeConn:f[b+7], after:u16(f,b+8), afterConn:f[b+10]}); }
+  return d;
+}
+// per connected minute; null until there's enough connected time to mean anything
+const perMin=(n,sec)=>sec>=10 ? n*60/sec : null;
+const fmtRate=r=>r==null?"—":(r<10?r.toFixed(1):String(Math.round(r)));
+const rateCls=r=>r==null?"dim":r<1?"good":r<5?"warn":"bad";
+function fmtMins(sec){ if(sec<60) return sec+" s"; const m=Math.floor(sec/60); return m<60 ? m+" min" : Math.floor(m/60)+" h "+(m%60)+" min"; }
+function fmtAge(s){ return s<5?"just now": s<60? s+" s ago" : fmtMins(s)+" ago"; }
+function sigWord(dbm){ return dbm>-65?["strong","good"]:dbm>-75?["good","good"]:dbm>-82?["weak","warn"]:["very weak","bad"]; }
+function pickLsSlot(d){
+  const ok=k=>d.slots[k] && d.slots[k].bonded;
+  if(lsSlot>=0 && ok(lsSlot)) return lsSlot;
+  for(let k=0;k<4;k++) if(d.slots[k].up) return k;
+  for(let k=0;k<4;k++) if(ok(k)) return k;
+  return 0;
+}
+function applyStats(d){
+  lsData=d;
+  const k=pickLsSlot(d); 
+  if(k!==lsSlot){ lsSlot=k; lsHist=[]; lsPrev=null; }
+  const s=d.slots[k], now=Date.now();
+  // sparkline: stutters between samples, bucketed by wall-clock time
+  if(lsPrev && s.totSt>=lsPrev.totSt) lsHist.push({t:now, n:s.totSt-lsPrev.totSt});
+  else lsHist=[];
+  lsPrev={totSt:s.totSt};
+  lsHist=lsHist.filter(h=>now-h.t<300000);
+  // controller tabs when several are bonded
+  const bonded=[0,1,2,3].filter(i=>d.slots[i].bonded), tabs=$("#lsSlotTabs");
+  tabs.style.display = bonded.length>1 ? "flex" : "none";
+  if(bonded.length>1){
+    tabs.innerHTML="";
+    for(const i of bonded){ const b=document.createElement("button"); b.className="slot-tab"+(i===k?" active":"");
+      const dot=document.createElement("span"); dot.className="dot"+(d.slots[i].up?" up":""); b.append(dot,"Controller "+(i+1));
+      b.onclick=()=>{ lsSlot=i; lsHist=[]; lsPrev=null; applyStats(lsData); }; tabs.appendChild(b); }
+  }
+  const r60=perMin(s.st60,s.conn60), f60=perMin(s.fz60,s.conn60);
+  setV("lsRate", s.conn60>=10?fmtRate(r60):(s.up?"…":"—"), s.conn60>=10?rateCls(r60):"dim");
+  setV("lsFrz", s.conn60>=10?fmtRate(f60):"—", s.conn60>=10?rateCls(f60*3):"dim");
+  setV("lsWorst", s.worst60 ? s.worst60+" ms" : (s.conn60? "under 40 ms":"—"), s.worst60>=250?"bad":s.worst60>=100?"warn":s.conn60?"good":"dim");
+  setV("lsDeliv", s.deliv<=1000 ? (s.deliv/10).toFixed(1)+"%" : "—", s.deliv<=1000 ? (s.deliv>=980?"good":s.deliv>=900?"warn":"bad") : "dim");
+  if(s.up && s.rssi){ const w=sigWord(-s.rssi); setV("lsSig","-"+s.rssi+" dBm",w[1]); $("#lsSigS").textContent=w[0]; }
+  else { setV("lsSig","—","dim"); $("#lsSigS").textContent=s.bonded?"not connected":"no controller"; }
+  setV("lsCh", d.ch ? String(d.ch) : "—"); $("#lsChS").textContent = d.ch ? (2400+d.ch)+" MHz" : " ";
+  const avg=perMin(s.totSt,s.totConn);
+  setV("lsAvg", fmtRate(avg), rateCls(avg));
+  setV("lsTot", String(s.totSt)); $("#lsTotS").textContent = s.totFz+" freeze"+(s.totFz===1?"":"s")+" (100 ms+)";
+  setV("lsConn", fmtMins(s.totConn)); $("#lsConnS").textContent = "of "+fmtMins(d.since)+" since reset";
+  setV("lsWorstTot", s.totWorst ? s.totWorst+" ms" : "—", s.totWorst>=250?"bad":s.totWorst>=100?"warn":"");
+  // sparkline: 30 bars of 10 s
+  const B=30, sp=$("#lsSpark"), bars=new Array(B).fill(0);
+  for(const h of lsHist){ const i=B-1-Math.floor((now-h.t)/10000); if(i>=0&&i<B) bars[i]+=h.n; }
+  const mx=Math.max(3,...bars);
+  sp.innerHTML=bars.map(n=>'<i class="'+(n===0?"z":n>=5?"hi":"")+'" style="height:'+(n?Math.max(8,Math.round(n*100/mx)):4)+'%" title="'+n+' stutter'+(n===1?"":"s")+'"></i>').join("");
+  // policy chips
+  const chips=[];
+  chips.push((d.flags&8)?['ok',"Automatic channel moves on"]:['warn',"Automatic channel moves off"]);
+  if(d.flags&8) chips.push((d.flags&1)?['ok',"Stutter-aware moves: watching"]:['',"Stutter-aware moves paused (works with one controller connected)"]);
+  if(d.flags&2) chips.push(['warn',"Weak signal: moving channels won't help, so it stays put"]);
+  if(d.flags&4) chips.push(['warn',"Moving channel…"]);
+  if(d.futile) chips.push(['warn',"Backing off: last "+d.futile+" move"+(d.futile>1?"s":"")+" didn't help"]);
+  $("#lsPolicy").innerHTML=chips.map(c=>'<span class="chip '+c[0]+'">'+escHtml(c[1])+'</span>').join("");
+  // move log
+  const tb=$("#lsMoves");
+  tb.innerHTML = d.moves.length ? d.moves.map(m=>{
+    const before=fmtRate(perMin(m.before,m.beforeConn));
+    const after=m.after===0xFFFF?'<span style="color:var(--mut)">measuring…</span>':m.after===0xFFFE?"—":fmtRate(perMin(m.after,m.afterConn));
+    return '<tr><td>'+fmtAge(m.age)+'</td><td>'+m.from+' → '+m.to+' <span style="color:var(--mut);font-size:11px">'+(2400+m.to)+' MHz</span></td>'
+      +'<td>'+(m.cause===1?"Stutter fix":"Recovery / manual")+'</td>'
+      +'<td>'+(m.ok?'<span class="pill up">moved</span>':'<span class="pill dn">rolled back</span>')+'</td>'
+      +'<td>'+before+'</td><td>'+after+'</td></tr>';
+  }).join("") : '<tr><td class="empty" colspan="6">No channel moves since reset.</td></tr>';
+  updateGlance();
+}
+async function resetStats(){
+  const f=await xchg(async()=>{ await send([0x2A]); return parseStats(await readFrame(0xB5,110)); });
+  if(f){ lsHist=[]; lsPrev=null; applyStats(f); toast("Counters reset"); } else toast("Reset failed — try again",true);
+}
+
+// ---- saved runs (this browser only) ----
+const RUNS_KEY="opk_ls_runs";
+function loadRuns(){ try{ return JSON.parse(localStorage.getItem(RUNS_KEY))||[]; }catch(e){ return []; } }
+function storeRuns(r){ try{ localStorage.setItem(RUNS_KEY, JSON.stringify(r.slice(0,30))); }catch(e){} }
+function runRow(r){ return [r.label, new Date(r.t).toLocaleDateString(), fmtMins(r.conn), fmtRate(perMin(r.st,r.conn)),
+  fmtRate(perMin(r.fz,r.conn)), r.worst?r.worst+" ms":"—", String(r.moves)]; }
+function renderRuns(){
+  const runs=loadRuns(), tb=$("#lsRuns");
+  tb.innerHTML = runs.length ? runs.map((r,i)=>'<tr>'+runRow(r).map((c,j)=>'<td'+(j===3?' style="color:var(--fg);font-weight:600"':'')+'>'+escHtml(c)+'</td>').join("")
+    +'<td><button data-del="'+i+'" title="Delete this run" aria-label="Delete run '+escHtml(r.label)+'">✕</button></td></tr>').join("")
+    : '<tr><td class="empty" colspan="8">No saved runs yet.</td></tr>';
+  tb.querySelectorAll("button[data-del]").forEach(b=>b.onclick=()=>{ const r=loadRuns(); r.splice(+b.dataset.del,1); storeRuns(r); renderRuns(); });
+}
+$("#lsSave").onclick=()=>{
+  if(!lsData) return;
+  const s=lsData.slots[lsSlot];
+  if(!s || s.totConn<60){ toast("Play at least a minute first",true); return; }
+  const label=($("#lsLabel").value.trim()) || ("Run "+(loadRuns().length+1));
+  const r=loadRuns();
+  r.unshift({label, t:Date.now(), conn:s.totConn, st:s.totSt, fz:s.totFz, worst:s.totWorst, moves:lsData.moves.length,
+    build:($("#stBuild")?$("#stBuild").textContent:"")});
+  storeRuns(r); renderRuns(); toast("Run saved");
+};
+$("#lsCopy").onclick=async()=>{
+  const runs=loadRuns(); if(!runs.length){ toast("No saved runs to copy",true); return; }
+  const head=["Run","Date","Connected","Stutters/min","Freezes/min","Longest gap","Moves","Build"];
+  const txt=[head.join("\t"), ...runs.map(r=>[...runRow(r), r.build||""].join("\t"))].join("\n");
+  try{ await navigator.clipboard.writeText(txt); toast("Copied — paste into a message or sheet"); }
+  catch(e){ log("copy failed — runs:\n"+txt); toast("Copy blocked — table written to the log",true); }
+};
+$("#lsReset").onclick=resetStats;
+try{ $("#lsLabel").value=localStorage.getItem("opk_ls_label")||""; }catch(e){}
+$("#lsLabel").addEventListener("change",e=>{ try{ localStorage.setItem("opk_ls_label", e.target.value); }catch(_){} });
+renderRuns();
+// remember whether the diagnostics fold was open
+try{ if(localStorage.getItem("opk_adv_open")==="1") $("#linkAdv").open=true; }catch(e){}
+$("#linkAdv").addEventListener("toggle",e=>{ try{ localStorage.setItem("opk_adv_open", e.target.open?"1":"0"); }catch(_){} });
+
+// ---- overview ----
+function updateGlance(){
+  const btn=document.querySelector('.modebtn[data-mode="'+lastMode+'"]');
+  setV("gMode", btn?btn.textContent:(lastMode>=0?"Mode "+lastMode:"—"));
+  const et=etypeForMode(lastMode);
+  $("#gModeS").textContent = et>=0 ? TYPE_DEFS[et].name+" controller" : (lastMode>=0?"native puck mode":" ");
+  const live=[0,1,2,3].filter(i=>g_slotData[i] && g_slotData[i].up);
+  if(live.length){ const d=g_slotData[live[0]];
+    setV("gCtl", live.length>1?live.length+" connected":"Connected","good");
+    $("#gCtlS").textContent = d.battery ? "battery "+d.battery+"%" : " ";
+    if(d.rssi){ const w=sigWord(-d.rssi); setV("gSig","-"+d.rssi+" dBm",w[1]); $("#gSigS").textContent=w[0]; }
+    else { setV("gSig","—","dim"); $("#gSigS").textContent=" "; }
+  } else { setV("gCtl","Not connected","dim"); $("#gCtlS").textContent="turn the controller on"; setV("gSig","—","dim"); $("#gSigS").textContent=" "; }
+  if(!(opkCaps&CAP_STATS)){ setV("gStut","—","dim"); $("#gStutS").textContent="needs this build's firmware"; }
+  else if(lsData){ const s=lsData.slots[lsSlot]||{}; const r=perMin(s.st60,s.conn60);
+    setV("gStut", s.conn60>=10?fmtRate(r):"—", s.conn60>=10?rateCls(r):"dim"); $("#gStutS").textContent = s.conn60>=10?"last minute":"waiting for a controller"; }
+  if(!(opkCaps&CAP_PROFILES)){ setV("gProf","—","dim"); $("#gProfS").textContent="needs this build's firmware"; }
+  else if(profData && et>=0){ const a=profData.active[et]|0, def=TYPE_DEFS[et];
+    setV("gProf","Profile "+(a+1)); $("#gProfS").textContent=profData.back[et][a].map((c,i)=>PADDLE_POS[i][0]+" "+codeLabel(def,c)).join(" · ");
+    $("#gProfS").title=$("#gProfS").textContent; }
+  else if(et<0){ setV("gProf","—","dim"); $("#gProfS").textContent="not used in this mode"; }
+}
+function opkAfterBlob(p, mode){
+  lastMode=mode;
+  opkCaps = p.length>195 ? p[195] : 0;
+  const hasProf=!!(opkCaps&CAP_PROFILES), hasStats=!!(opkCaps&CAP_STATS);
+  $("#profilesCard").classList.toggle("hide",!hasProf);
+  $("#qualityCard").classList.toggle("hide",!hasStats);
+  document.querySelectorAll("#jumpNav [data-cap]").forEach(a=>a.classList.toggle("hide", !(opkCaps & +a.dataset.cap)));
+  // the per-type paddle rows only ever edited the ACTIVE profile; with the profile editor they live there
+  typeEls.forEach(rec=>{ rec.back.forEach(sel=>sel.parentNode.classList.toggle("hide",hasProf));
+    if(rec.backHint) rec.backHint.classList.toggle("hide",!hasProf); });
+  if(profData) renderProfiles(); else updateGlance();
+}
+// Called inside refresh() (poll lock held) after the blob: stats every ~2 s, profiles every ~5 s (they also
+// change from the controller itself: paddles + RB / LB / Start).
+async function opkPollExtras(){
+  pollTick++;
+  if((opkCaps&CAP_STATS) && pollTick%3===0){
+    await send([0x29]); const d=parseStats(await readFrame(0xB5,110)); if(d) applyStats(d);
+  }
+  if((opkCaps&CAP_PROFILES) && (!profData || pollTick%8===4)){
+    await send([0x26]); const d=await readProfiles(); if(d){ profData=d; renderProfiles(); }
+  }
+}
+
 async function startPolling(){
   polling=true; await refresh();
   while(polling && dev){
@@ -3124,5 +3547,6 @@ function lzV2InstallHandlers(){
 }
 lzV2InstallHandlers();
 </script>
+<div id="toast" role="status" aria-live="polite"></div>
 </body>
 </html>
