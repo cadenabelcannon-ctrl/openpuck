@@ -176,24 +176,156 @@
     .glance,#qualityCard .statgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .stat .v{font-size:16px}
   }
+  /* =================== visual polish =================== */
+  :root{ --bg:#0e1016; --card:#161921; --card2:#10131a; --line:#232836; --line2:#2e3546; --fg:#e8ecf2; --mut:#8c95a8; --acc:#5bd6a0; --acc2:#6aa6e6; }
+  body{font:14px/1.55 Inter,ui-sans-serif,-apple-system,"Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(1200px 500px at 50% -200px,#16202e 0%,rgba(14,16,22,0) 70%) no-repeat,var(--bg)}
+  ::selection{background:#2b4a6d}
+  a{color:var(--acc2)}
+  .wrap{max-width:1060px;padding:24px 22px 40px}
+  /* top bar */
+  .topbar{background:rgba(14,16,22,.82);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:10px 22px;gap:12px}
+  .topbar .brand{display:flex;align-items:center;gap:10px;font-size:15px;letter-spacing:0}
+  .topbar .brand small{font-size:12px;margin-left:4px}
+  .logo{width:26px;height:26px;flex:0 0 auto;display:block}
+  .logo.big{width:56px;height:56px}
+  .pill{padding:3px 10px;font-size:12px}
+  /* buttons and inputs */
+  button{background:#1d2230;border:1px solid var(--line2);border-radius:9px;padding:8px 14px;transition:background .15s,border-color .15s,color .15s}
+  button:hover{background:#232a3a;border-color:#3d4964}
+  button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:2px solid var(--acc2);outline-offset:2px}
+  button.primary{background:var(--acc2);border-color:var(--acc2);color:#07121f}
+  button.primary:hover{background:#82b6ee;border-color:#82b6ee}
+  button.active{background:var(--acc);border-color:var(--acc);color:#05201a}
+  button.big{padding:11px 20px;font-size:15px}
+  select,input[type=text]{background:var(--card2);border:1px solid var(--line2);border-radius:9px;padding:7px 10px}
+  select:hover,input[type=text]:hover{border-color:#3d4964}
+  input[type=range]{accent-color:var(--acc)}
+  /* cards */
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+  .cards>.card{margin:0}
+  .cards>.card.wide{grid-column:1/-1}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:0 1px 0 rgba(255,255,255,.03) inset,0 10px 30px rgba(0,0,0,.18)}
+  .card h2{font-size:16px;font-weight:650;letter-spacing:-.005em;text-transform:none;color:var(--fg);margin:0 0 6px}
+  .card h2+:not(.lede){margin-top:14px}
+  .lede{color:var(--mut);font-size:13.5px;margin:0 0 16px;max-width:76ch}
+  .lede strong{color:var(--fg);font-weight:600}
+  .note{line-height:1.5}
+  .colhead{font-size:11px;font-weight:600;letter-spacing:.07em}
+  .stat{background:var(--card2);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+  .stat .k{font-size:10.5px;font-weight:600;letter-spacing:.07em}
+  .stat .v{font-size:19px;font-weight:550}
+  .row{margin:10px 0}
+  .row.setting .note{flex:1 1 220px;margin:0}
+  .row.setting label{flex:0 0 185px}
+  /* segmented main tabs + section links */
+  #mainTabs{display:inline-flex;gap:4px;padding:4px;background:var(--card2);border:1px solid var(--line);border-radius:12px;margin:0 0 14px}
+  #mainTabs .slot-tab{border:1px solid transparent;background:transparent;padding:7px 18px;border-radius:9px}
+  #mainTabs .slot-tab.active{background:#222a3b;border-color:var(--line2);color:var(--fg)}
+  .jump{margin:0 0 18px;gap:4px}
+  .jump a{background:transparent;border-color:transparent;padding:4px 10px}
+  .jump a:hover{background:var(--card);border-color:var(--line)}
+  .slot-tab{border-radius:9px}
+  /* device menu */
+  .menu{position:relative}
+  .menu>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:7px 12px;border:1px solid var(--line2);border-radius:9px;background:#1d2230;font-weight:500;user-select:none}
+  .menu>summary::-webkit-details-marker{display:none}
+  .menu>summary svg{width:12px;height:12px;transition:transform .15s}
+  .menu[open]>summary{border-color:var(--acc2)}
+  .menu[open]>summary svg{transform:rotate(180deg)}
+  .menu-pop{position:absolute;right:0;top:calc(100% + 8px);width:250px;background:#161921;border:1px solid var(--line2);border-radius:13px;padding:6px;box-shadow:0 20px 60px rgba(0,0,0,.55);z-index:60;display:flex;flex-direction:column;gap:1px}
+  .menu-h{color:var(--mut);font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;padding:6px 10px 4px}
+  .topbar .menu-pop button,.menu-pop button{display:flex;flex-direction:column;align-items:flex-start;gap:1px;width:100%;text-align:left;background:transparent;border:0;border-radius:8px;padding:8px 10px;color:var(--fg);font-weight:500}
+  .menu-pop button:hover{background:#222838}
+  .menu-pop button small{color:var(--mut);font-size:11.5px;font-weight:400}
+  .menu-pop button.danger{color:#ff9bb0}
+  .menu-pop button.danger:hover{background:#2c1420}
+  .menu-pop button.beta{color:#ffd875}
+  .menu-pop button.beta.active{background:#2d2613}
+  .menu-pop hr{border:0;border-top:1px solid var(--line);margin:4px 4px}
+  /* toggle switches (the panel's on/off buttons) */
+  button.tog{position:relative;flex:0 0 auto;width:44px;height:24px;padding:0;border-radius:99px;font-size:0;color:transparent;background:#2a3142;border:1px solid #39425a}
+  button.tog::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#c9d1df;transition:transform .18s}
+  button.tog.active{background:var(--acc);border-color:var(--acc)}
+  button.tog.active::after{transform:translateX(20px);background:#fff}
+  @media(prefers-reduced-motion:reduce){button.tog::after{transition:none}}
+  /* modes */
+  .modegroups{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px 24px;margin-bottom:6px}
+  .modegroups .modes{gap:8px;margin-top:8px}
+  .modebtn{padding:8px 13px}
+  /* "more info" folds */
+  details.more{margin-top:10px}
+  details.more>summary{cursor:pointer;color:var(--acc2);font-size:12.5px;list-style:none;display:inline-block}
+  details.more>summary::-webkit-details-marker{display:none}
+  details.more>summary::before,details.adv>summary::before{content:"\25B8\00a0\00a0"}
+  details.more[open]>summary::before,details.adv[open]>summary::before{content:"\25BE\00a0\00a0"}
+  details.adv>summary{font-size:12.5px}
+  details.more>.note:first-of-type{margin-top:6px}
+  .warnline{color:#d8b56a}
+  /* shortcut keys */
+  table.keys{border-collapse:collapse;width:100%}
+  table.keys td{padding:8px 14px 8px 0;border-top:1px solid var(--line);vertical-align:top;color:var(--mut);font-size:13px}
+  table.keys tr:first-child td{border-top:0}
+  table.keys td:first-child{white-space:nowrap;width:1%}
+  kbd{display:inline-block;font:600 12px/1 ui-sans-serif,system-ui,sans-serif;color:var(--fg);background:#1f2534;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;padding:4px 7px}
+  /* welcome */
+  .hero.hide{display:none}
+  .hero{display:flex;gap:22px;align-items:flex-start;padding:30px 32px;max-width:720px;margin:30px auto 18px}
+  .hero h1{font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
+  .steps{margin:0 0 20px;padding-left:20px;color:var(--fg)}
+  .steps li{margin:5px 0}
+  .steps li::marker{color:var(--acc);font-weight:700}
+  #cloneHome{max-width:720px;margin-left:auto;margin-right:auto}
+  /* bottom */
+  details.logwrap{margin-top:22px}
+  .foot{color:var(--mut);font-size:12px;text-align:center;margin-top:28px}
+  .foot a{color:var(--mut)}
+  @media(max-width:860px){ .cards{grid-template-columns:minmax(0,1fr)} }
+  @media(max-width:600px){
+    .wrap{padding:14px 12px 30px} .card{padding:16px} .hero{flex-direction:column;padding:22px;margin-top:10px}
+    .topbar{gap:6px} .topbar .brand>span{display:none} .topbar .spacer{flex:1 1 0} .menu-pop{right:-4px}
+    #mainTabs{display:flex} #mainTabs .slot-tab{flex:1;justify-content:center;padding:7px 8px}
+    .modegroups{grid-template-columns:minmax(0,1fr)}
+  }
 </style>
 </head>
 <body>
 <div class="topbar">
-  <span class="brand">OpenPuck <small>SC2 puck · WebUSB</small></span>
+  <span class="brand"><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5bd6a0"/><stop offset="1" stop-color="#5b9bd6"/></linearGradient></defs><rect x="2" y="2" width="28" height="28" rx="9" fill="url(#lg)"/><circle cx="16" cy="16" r="6.5" fill="none" stroke="#0f1117" stroke-width="2.6"/><circle cx="16" cy="16" r="1.9" fill="#0f1117"/></svg><span>OpenPuck <small>configurator</small></span></span>
   <span id="connState" class="pill dn">disconnected</span>
   <button id="connectBtn" class="primary">Connect</button>
   <span id="updAvail" class="pill hide" title="A newer OpenPuck release is available — click to open the Firmware update tab">…</span>
   <span class="spacer"></span>
-  <button id="betaBtn" class="beta" title="Show beta features warning and enable beta UI">Beta</button>
-  <button id="debugCdc" title="Reboot ONCE with the CDC serial console enabled (WebUSB goes away for that boot); auto-reverts on the next boot">Debug CDC</button>
-  <button id="dfuSerial" title="Reboot into serial DFU (adafruit-nrfutil), then replug">Serial DFU</button>
-  <button id="dfuUf2" title="Reboot into the UF2 mass-storage bootloader; drop a .uf2 on the drive">UF2 DFU</button>
-  <button id="factoryErase" class="danger" title="Wipe ALL bonds + settings and reboot to defaults. You must re-pair. Cannot be undone.">⚠ Factory erase</button>
-  <button id="wipeBoard" class="danger debugonly" title="ERASE THE ENTIRE BOARD: firmware + all settings + bonds. The board reboots app-less and mounts as the UF2 drive on every boot until you re-flash OpenPuck. Debug only. Cannot be undone.">☢ Wipe board</button>
+  <details class="menu" id="devMenu">
+    <summary>Device<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+    <div class="menu-pop">
+      <div class="menu-h">Reboot into</div>
+      <button id="dfuUf2" title="Reboot into the UF2 mass-storage bootloader; drop a .uf2 on the drive"><span>UF2 drive</span><small>drag-and-drop firmware update</small></button>
+      <button id="dfuSerial" title="Reboot into serial DFU (adafruit-nrfutil), then replug"><span>Serial DFU</span><small>for adafruit-nrfutil</small></button>
+      <button id="debugCdc" title="Reboot ONCE with the CDC serial console enabled (WebUSB goes away for that boot); auto-reverts on the next boot"><span>Debug console</span><small>serial log for one boot</small></button>
+      <hr>
+      <button id="betaBtn" class="beta" title="Show beta features warning and enable beta UI">Beta</button>
+      <hr>
+      <button id="factoryErase" class="danger" title="Wipe ALL bonds + settings and reboot to defaults. You must re-pair. Cannot be undone."><span>⚠ Factory erase</span><small>wipes pairings + settings</small></button>
+      <button id="wipeBoard" class="danger debugonly" title="ERASE THE ENTIRE BOARD: firmware + all settings + bonds. The board reboots app-less and mounts as the UF2 drive on every boot until you re-flash OpenPuck. Debug only. Cannot be undone.">☢ Wipe board</button>
+    </div>
+  </details>
 </div>
 <div class="wrap">
-  <p class="sub">First connect uses the Chrome/Edge device picker; reconnects are automatic. If the picker is empty, quit any app holding the device or replug.</p>
+  <div class="card hero" id="welcome">
+    <svg class="logo big" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5bd6a0"/><stop offset="1" stop-color="#5b9bd6"/></linearGradient></defs><rect x="2" y="2" width="28" height="28" rx="9" fill="url(#lg2)"/><circle cx="16" cy="16" r="6.5" fill="none" stroke="#0f1117" stroke-width="2.6"/><circle cx="16" cy="16" r="1.9" fill="#0f1117"/></svg>
+    <div>
+      <h1>Set up your OpenPuck</h1>
+      <p class="lede">Change modes, paddle profiles and button mapping, and check connection quality. Everything saves straight to the puck.</p>
+      <ol class="steps">
+        <li>Plug the puck into this computer.</li>
+        <li>Press <b>Connect</b> and choose it in the browser's list.</li>
+        <li>That's it: next time it reconnects by itself.</li>
+      </ol>
+      <button class="primary big" id="welcomeConnect">Connect your puck</button>
+      <p class="note" id="welcomeNote">List empty? Quit any app that's using the puck, or unplug it and plug it back in. Needs Chrome or Edge.</p>
+    </div>
+  </div>
 
   <!-- holds the clone section while no OpenPuck is connected (the Backup & clone card is hidden then) -->
   <div class="card" id="cloneHome"><h2>Clone pairings from an official puck</h2></div>
@@ -206,7 +338,7 @@
 
     <div id="tabMain">
     <nav class="jump" id="jumpNav" aria-label="Sections">
-      <a href="#glanceCard">Overview</a><a href="#modeCard">USB mode</a><a href="#qualityCard" data-cap="2">Connection quality</a><a href="#linkCard">Link status</a><a href="#mappingCard">Button mapping</a><a href="#profilesCard" data-cap="1">Paddle profiles</a><a href="#shortcutsCard">Shortcuts</a><a href="#backupCard">Backup</a>
+      <a href="#modeCard">USB mode</a><a href="#profilesCard" data-cap="1">Paddle profiles</a><a href="#mappingCard">Button mapping</a><a href="#shortcutsCard">Shortcuts</a><a href="#qualityCard" data-cap="2">Connection quality</a><a href="#linkCard">Link status</a><a href="#backupCard">Backup</a>
     </nav>
     <div class="cards">
     <div class="card wide" id="glanceCard">
@@ -219,6 +351,7 @@
         <div class="stat"><div class="k">Paddle profile</div><div class="v" id="gProf">—</div><div class="s" id="gProfS">&nbsp;</div></div>
       </div>
     </div>
+
     <div class="card wide" id="pairedCard" style="display:none">
       <h2>Paired pucks</h2>
       <div class="row" style="gap:10px;align-items:center;margin-bottom:4px">
@@ -228,66 +361,135 @@
       <div id="pairedList"><p class="note">Reading paired pucks…</p></div>
       <p class="note" style="margin-top:8px">This is a <strong>ReversePuck</strong> controller dongle (28DE:1302). It emulates a Steam Controller to whichever puck it's paired with. Pair new pucks with <code>scpair.py</code>; use the <em>Firmware update</em> tab to flash a new dongle build.</p>
     </div>
-    <div class="card">
-      <h2>Version</h2>
-      <div class="statgrid">
-        <div class="stat"><div class="k">Firmware build</div><div class="v" id="stVersionBuild">—</div></div>
-        <div class="stat"><div class="k">Status protocol</div><div class="v" id="stVersionProto">—</div></div>
-        <div class="stat"><div class="k">Panel update</div><div class="v" id="stVersionUpdate">—</div></div>
-      </div>
-      <p class="note">This section reflects the connected puck. Reconnect after flashing or changing modes to verify what is currently running.</p>
-    </div>
 
-    <div class="card" id="modeCard">
+    <div class="card wide" id="modeCard">
       <h2>USB mode</h2>
-      <div class="modes" style="flex-wrap:wrap">
-        <button data-mode="0" class="modebtn">Steam (puck)</button>
-        <button data-mode="1" class="modebtn">Xbox 360</button>
-        <button data-mode="2" class="modebtn">Switch (HORIPAD)</button>
-        <button data-mode="3" class="modebtn">Lizard (always)</button>
-        <button data-mode="4" class="modebtn">Switch Pro + gyro</button>
-        <button data-mode="5" class="modebtn">PS5 DualSense</button>
-        <button data-mode="6" class="modebtn">HID gyro (DS4)</button>
-        <button data-mode="9" class="modebtn">PS3 (DualShock 3)</button>
-        <button data-mode="10" class="modebtn">Original Xbox</button>
-        <button data-mode="11" class="modebtn">DirectInput (sims)</button>
-        <button data-mode="12" class="modebtn">SInput (SDL native)</button>
+      <p class="lede">What the puck shows up as when it's plugged in. Switching reboots it (about 2 seconds).</p>
+      <div class="modegroups">
+        <div><div class="colhead">Consoles</div>
+          <div class="modes">
+            <button data-mode="4" class="modebtn">Switch Pro + gyro</button>
+            <button data-mode="2" class="modebtn">Switch (HORIPAD)</button>
+            <button data-mode="1" class="modebtn">Xbox 360</button>
+            <button data-mode="5" class="modebtn">PS5 DualSense</button>
+            <button data-mode="9" class="modebtn">PS3 (DualShock 3)</button>
+            <button data-mode="10" class="modebtn">Original Xbox</button>
+          </div></div>
+        <div><div class="colhead">PC &amp; Steam</div>
+          <div class="modes">
+            <button data-mode="0" class="modebtn">Steam (puck)</button>
+            <button data-mode="3" class="modebtn">Lizard (always)</button>
+            <button data-mode="6" class="modebtn">HID gyro (DS4)</button>
+            <button data-mode="11" class="modebtn">DirectInput (sims)</button>
+            <button data-mode="12" class="modebtn">SInput (SDL native)</button>
+          </div></div>
       </div>
-      <p class="note">Switching reboots the copycat and re-enumerates USB (~2 s). WebUSB works in every mode, including Steam/Lizard with Steam running (Chrome claims the vendor interface; Steam keeps the HID slots). Switch HORIPAD + WebUSB is PC-only. Original Xbox emulates one Microsoft Controller S and uses the Xbox mapping tab; LB/RB become White/Black. It's for a real Original Xbox console — a PC needs a driver for the original Xbox controller to see it as a gamepad.</p>
-      <p class="note"><b>DirectInput</b> is for flight/space sims: every analog input is live at once, split over two joysticks (#1 sticks + triggers + 26 buttons, #2 trackpads + gyro). Trackpad axes hold their last position and re-centre on a pad click. <b>SInput</b> is the open SDL-native protocol — SDL3 / Steam Input read sticks, both analog triggers, gyro, both trackpads and battery from it natively, with rumble back from the host.</p>
-      <div class="row"><label>Persist last mode</label>
+      <div class="row setting"><label for="persistMode">Remember last mode</label>
         <button id="persistMode">off</button>
-        <span class="note" style="flex:1">Off (default): every restart / fresh reconnect boots into Steam mode. On: remembers the last mode you selected.</span>
+        <span class="note">Off: always starts in Steam mode. On: starts in the mode you last picked.</span>
       </div>
+      <details class="more"><summary>About the modes</summary><p class="note">Switching reboots the puck and re-enumerates USB (~2 s). WebUSB works in every mode, including Steam/Lizard with Steam running (Chrome claims the vendor interface; Steam keeps the HID slots). Switch HORIPAD + WebUSB is PC-only. Original Xbox emulates one Microsoft Controller S and uses the Xbox mapping tab; LB/RB become White/Black. It's for a real Original Xbox console — a PC needs a driver for the original Xbox controller to see it as a gamepad.</p><p class="note"><b>DirectInput</b> is for flight/space sims: every analog input is live at once, split over two joysticks (#1 sticks + triggers + 26 buttons, #2 trackpads + gyro). Trackpad axes hold their last position and re-centre on a pad click. <b>SInput</b> is the open SDL-native protocol — SDL3 / Steam Input read sticks, both analog triggers, gyro, both trackpads and battery from it natively, with rumble back from the host.</p></details>
     </div>
 
-    <div class="card">
-      <h2>Back4 chords (face + D-pad)</h2>
-      <p class="note" style="margin-top:0">Hold all four back paddles (L4+R4+L5+R5) plus a face button or D-pad direction to switch mode without the WebUI. <strong>A is always Steam</strong> — that is the way back out of any mode. B / X / Y and all four D-pad directions are configurable below (defaults: B=Lizard, X=Xbox, Y=Switch Pro).</p>
+    <div class="card wide hide" id="profilesCard">
+      <h2>Paddle profiles</h2>
+      <p class="lede">Four layouts for each controller type, arranged like the paddles on the back of the controller. Switch from the controller with <strong>paddles + RB / LB</strong>, or press <em>Use this</em>. Changes save straight away.</p>
+      <div class="slot-tabs" id="profTabs"></div>
+      <div class="prof-grid" id="profGrid"></div>
+      <p class="note" id="profNote"></p>
+    </div>
+
+    <div class="card wide" id="mappingCard">
+      <h2>Button mapping</h2>
+      <p class="lede">Settings for each controller type the puck can pretend to be. The green dot marks the one in use now. Steam and Lizard modes are handled by Steam itself.</p>
+      <div id="typeCfgs"></div>
+    </div>
+
+    <div class="card wide" id="shortcutsCard">
+      <h2>Controller shortcuts</h2>
+      <p class="lede">Works from the controller alone. Hold <strong>all four back paddles</strong>, then press the second button. Xbox, Switch and PlayStation modes only.</p>
+      <table class="keys">
+        <tr><td><kbd>Paddles</kbd> + <kbd>RB</kbd></td><td>Next paddle profile. The controller buzzes 1–4 times for the profile number.</td></tr>
+        <tr><td><kbd>Paddles</kbd> + <kbd>LB</kbd></td><td>Previous paddle profile.</td></tr>
+        <tr><td><kbd>Paddles</kbd> + <kbd>Start (+)</kbd></td><td>Paddle-assign mode on/off (long buzz). Tap a paddle (1 buzz), then the button it should act as (2 buzzes). The same paddle twice turns it off (3 buzzes). Closes itself after 30 s idle.</td></tr>
+        <tr><td><kbd>Paddles</kbd> + <kbd>Select (−)</kbd></td><td>Flip Nintendo / Xbox button layout. 2 buzzes = Nintendo, 1 = Xbox. Paddles mapped to face buttons flip with it.</td></tr>
+        <tr><td><kbd>Paddles</kbd> + <kbd>A / B / X / Y / D-pad</kbd></td><td>Change USB mode (see <a href="#chordCard">Mode shortcuts</a>).</td></tr>
+      </table>
+    </div>
+
+    <div class="card wide" id="chordCard">
+      <h2>Mode shortcuts</h2>
+      <p class="lede">Hold all four back paddles and press a button to change USB mode without a computer. <strong>Paddles + A always goes back to Steam mode.</strong></p>
       <div class="chord-cols">
         <div>
           <div class="colhead">Face buttons</div>
-          <div class="row"><label>back4 + B</label><select class="chord" data-i="0"></select></div>
-          <div class="row"><label>back4 + X</label><select class="chord" data-i="1"></select></div>
-          <div class="row"><label>back4 + Y</label><select class="chord" data-i="2"></select></div>
+          <div class="row"><label>Paddles + B</label><select class="chord" data-i="0"></select></div>
+          <div class="row"><label>Paddles + X</label><select class="chord" data-i="1"></select></div>
+          <div class="row"><label>Paddles + Y</label><select class="chord" data-i="2"></select></div>
         </div>
         <!-- D-pad chords (firmware >= v18). Unlike the face selects these offer the game/clean modes too: those
              modes have no WebUSB interface, so a chord is the only way IN, and back4+A is always the way out.
              Older firmware has no D-pad chords at all -> the whole column hides (see #dpadChords in applyBlob). -->
         <div id="dpadChords" class="hide">
           <div class="colhead">D-pad</div>
-          <div class="row"><label>back4 + Left</label><select class="chordD" data-i="0"></select></div>
-          <div class="row"><label>back4 + Up</label><select class="chordD" data-i="1"></select></div>
-          <div class="row"><label>back4 + Right</label><select class="chordD" data-i="2"></select></div>
-          <div class="row"><label>back4 + Down</label><select class="chordD" data-i="3"></select></div>
+          <div class="row"><label>Paddles + Left</label><select class="chordD" data-i="0"></select></div>
+          <div class="row"><label>Paddles + Up</label><select class="chordD" data-i="1"></select></div>
+          <div class="row"><label>Paddles + Right</label><select class="chordD" data-i="2"></select></div>
+          <div class="row"><label>Paddles + Down</label><select class="chordD" data-i="3"></select></div>
         </div>
       </div>
       <p id="dpadOld" class="note hide">This puck's firmware predates the D-pad chords — update it to configure them.</p>
     </div>
 
+    <div class="card">
+      <h2>Rumble</h2>
+      <p class="lede">Shape the rumble games send in Xbox, Switch and PlayStation modes.</p>
+      <!-- Host-rumble shaping (firmware >= v21). Applies to the translated modes (Xbox / Switch / PlayStation),
+           where the puck decodes the host's rumble packet itself. Steam mode relays Steam's own haptics
+           untouched, so these do nothing there. Older firmware hides the block. -->
+      <div id="rumbleBlock">
+        <div class="row"><label>Style</label><select id="rumbleStyle"></select></div>
+        <div class="row"><label>Strength</label><select id="rumbleScale"></select></div>
+        <div class="row" style="margin:10px 0 0"><button id="rumbleTest">Test rumble</button>
+          <span class="note" style="flex:1">Half-second buzz with these settings.</span></div>
+        <details class="more"><summary>What the styles do</summary><p class="note">Strength is a percentage of the amplitude the game asked for; 200% is the shipped default, so leave it there for stock feel. Style reshapes the two motors before that scale: <strong>mono</strong> drives both at the stronger value, <strong>heavy</strong> and <strong>light</strong> mute one motor each, <strong>punchy</strong> softens weak effects while leaving strong ones alone, and <strong>soft</strong> lifts weak ones so subtle rumble is felt.</p></details>
+      </div>
+      <p id="rumbleOld" class="note hide">This puck's firmware predates the rumble-shaping settings — update it to configure them.</p>
+    </div>
+
+    <div class="card">
+      <h2>Switch Pro motion</h2>
+      <p class="lede">How the gyro feels in Switch Pro mode.</p>
+      <!-- Gyro mapping (firmware >= v19). Older firmware always uses the corrected mapping and has no field
+           to set -> the whole block hides (see #swGyroMapBlock in applyBlob). -->
+      <div id="swGyroMapBlock">
+        <div class="row"><label>Gyro mapping</label><select id="swGyroMap"></select></div>
+        <details class="more"><summary>More info</summary><p class="note">Corrected (default) trims the gyro so Switch Pro mode matches a genuine Pro Controller and Steam mode (roll ×0.8, pitch/yaw ×0.9). Legacy sends the raw axes untrimmed — the pre-fix behavior, if you preferred the faster feel or tuned your in-game sensitivity around it.</p></details>
+      </div>
+      <p id="swGyroOld" class="note hide">This puck's firmware predates the gyro-mapping setting — update it to configure it.</p>
+    </div>
+
+    <div class="card" id="mouseCard">
+      <h2>Trackpad mouse</h2>
+      <p class="lede">The right pad as a mouse in Lizard and Xbox modes.</p>
+      <div class="row"><label>Sensitivity</label><input type="range" id="mDiv" min="4" max="200" step="1"><span class="val" id="mDivV"></span></div>
+      <div class="row"><label>Glide / friction</label><input type="range" id="mFric" min="0" max="99" step="1"><span class="val" id="mFricV"></span></div>
+      <details class="more"><summary>More info</summary><p class="note">Applies to the right-pad cursor in Steam mode with Steam closed, Lizard mode and Xbox mode. Sensitivity is a divisor: lower is a faster pointer. Glide is how long the cursor coasts after a flick.</p></details>
+    </div>
+
+    <div class="card" id="versionCard">
+      <h2>Firmware</h2>
+      <div class="statgrid">
+        <div class="stat"><div class="k">Firmware build</div><div class="v" id="stVersionBuild">—</div></div>
+        <div class="stat"><div class="k">Status protocol</div><div class="v" id="stVersionProto">—</div></div>
+        <div class="stat"><div class="k">Panel update</div><div class="v" id="stVersionUpdate">—</div></div>
+      </div>
+      <p class="note">Shows what the connected puck is running. Reconnect after flashing to refresh it.</p>
+    </div>
+
     <div class="card wide hide" id="qualityCard">
       <h2>Connection quality</h2>
-      <p class="note" style="margin-top:0">How smooth the controller feels, in numbers. A <strong>stutter</strong> is a gap of 40 ms or more between fresh reports from the controller (a few frames of frozen input); a <strong>freeze</strong> is 100 ms or more. Rates count only the time a controller was connected, so different boards, rooms and sessions compare fairly.</p>
+      <p class="lede">How smooth the controller feels, in numbers. A <strong>stutter</strong> is 40 ms or more without fresh input (a few frozen frames); a <strong>freeze</strong> is 100 ms or more. Only connected time counts, so runs compare fairly.</p>
       <div class="slot-tabs" id="lsSlotTabs" style="display:none"></div>
       <div class="statgrid">
         <div class="stat"><div class="k">Stutters / min</div><div class="v" id="lsRate">—</div><div class="s">last minute</div></div>
@@ -332,12 +534,14 @@
         <div class="stat"><div class="k">RF link</div><div class="v" id="stLink">—</div></div>
         <div class="stat"><div class="k">Battery</div><div class="v" id="stBatt">—</div></div>
         <div class="stat"><div class="k">Signal</div><div class="v" id="stRssi">—</div></div>
+      </div>
+
+      <details class="adv" id="linkAdv"><summary>Advanced diagnostics</summary>
+      <div class="statgrid" style="margin-bottom:10px">
         <div class="stat"><div class="k">Polls/s</div><div class="v" id="stSlotPolls">—</div></div>
         <div class="stat"><div class="k">Delivered</div><div class="v" id="stSlotF1">—</div></div>
         <div class="stat"><div class="k">Fails/s (crc·noRx·relay)</div><div class="v" id="stSlotFail">—</div></div>
       </div>
-
-      <details class="adv" id="linkAdv"><summary>Advanced diagnostics</summary>
       <!-- Global stats (sums over ALL controllers; the per-slot grid above shows the selected controller's own rates) -->
       <div class="statgrid">
         <div class="stat"><div class="k">Delivered (all)</div><div class="v" id="stRate">—</div></div>
@@ -365,10 +569,10 @@
         <span class="note" style="flex:1">If the controller's haptics get stuck/buzzing, this re-inits them (same as pressing Steam).</span>
       </div>
       <div class="row" style="margin:10px 0 0"><button id="ctlrOff">Turn off controller</button>
-        <span class="note" style="flex:1">Fires the controller power-off (0x9F "off!", x3) — the same path Steam's "turn off controller" and host-suspend use. Watch the link status to see it disconnect.</span>
+        <span class="note" style="flex:1">Same as Steam's "turn off controller".</span>
       </div>
-      <div class="row" style="margin:10px 0 0"><button id="isMachineInternal">off</button>
-        <span class="note" style="flex:1"><strong>Emulate Steam Machine.</strong> If this setting is enabled, OpenPuck will emulate a Steam Machine's internal receiver instead of a Steam Controller Puck.</span>
+      <div class="row setting" style="margin:10px 0 0"><label for="isMachineInternal">Emulate Steam Machine</label><button id="isMachineInternal">off</button>
+        <span class="note">Act as a Steam Machine's built-in receiver instead of a puck.</span>
       </div>
       <div class="row debugonly" style="margin:10px 0 0;border-top:1px solid #272d3d;padding-top:14px"><button id="stabBtn">Test stability</button>
         <span class="v" id="stabStatus" style="flex:0 0 auto;min-width:120px">—</span>
@@ -402,66 +606,7 @@
       <div id="rfAmbientBars" style="display:flex;gap:4px;align-items:flex-end;height:76px;margin-top:12px;padding:8px;background:#151821;border:1px solid #272d3d;border-radius:6px"></div>
     </div>
 
-    <div class="card" id="mouseCard">
-      <h2>Trackpad mouse (lizard + Xbox)</h2>
-      <div class="row"><label>Sensitivity</label><input type="range" id="mDiv" min="4" max="200" step="1"><span class="val" id="mDivV"></span></div>
-      <div class="row"><label>Glide / friction</label><input type="range" id="mFric" min="0" max="99" step="1"><span class="val" id="mFricV"></span></div>
-      <p class="note">Right-pad cursor in Steam-mode lizard (Steam closed) and in Xbox mode. Sensitivity is a divisor — lower = faster pointer. Glide = how long the cursor coasts after a flick.</p>
-    </div>
-
-    <div class="card">
-      <h2>Switch Pro motion</h2>
-      <!-- Gyro mapping (firmware >= v19). Older firmware always uses the corrected mapping and has no field
-           to set -> the whole block hides (see #swGyroMapBlock in applyBlob). -->
-      <div id="swGyroMapBlock">
-        <div class="row"><label>Gyro mapping</label><select id="swGyroMap"></select></div>
-        <p class="note">Corrected (default) trims the gyro so Switch Pro mode matches a genuine Pro Controller and Steam mode (roll ×0.8, pitch/yaw ×0.9). Legacy sends the raw axes untrimmed — the pre-fix behavior, if you preferred the faster feel or tuned your in-game sensitivity around it.</p>
-      </div>
-      <p id="swGyroOld" class="note hide">This puck's firmware predates the gyro-mapping setting — update it to configure it.</p>
-    </div>
-
-    <div class="card">
-      <h2>Rumble</h2>
-      <!-- Host-rumble shaping (firmware >= v21). Applies to the translated modes (Xbox / Switch / PlayStation),
-           where the puck decodes the host's rumble packet itself. Steam mode relays Steam's own haptics
-           untouched, so these do nothing there. Older firmware hides the block. -->
-      <div id="rumbleBlock">
-        <div class="row"><label>Style</label><select id="rumbleStyle"></select></div>
-        <div class="row"><label>Strength</label><select id="rumbleScale"></select></div>
-        <div class="row" style="margin:10px 0 0"><button id="rumbleTest">Test rumble</button>
-          <span class="note" style="flex:1">Buzzes every connected controller for half a second at the settings above, so you can compare styles without launching a game.</span></div>
-        <p class="note">Strength is a percentage of the amplitude the game asked for; 200% is the shipped default, so leave it there for stock feel. Style reshapes the two motors before that scale: <strong>mono</strong> drives both at the stronger value, <strong>heavy</strong> and <strong>light</strong> mute one motor each, <strong>punchy</strong> softens weak effects while leaving strong ones alone, and <strong>soft</strong> lifts weak ones so subtle rumble is felt.</p>
-      </div>
-      <p id="rumbleOld" class="note hide">This puck's firmware predates the rumble-shaping settings — update it to configure them.</p>
-    </div>
-
-    <div class="card wide" id="mappingCard">
-      <h2>Button mapping</h2>
-      <p class="note" style="margin-top:0">Separate mappings per emulated controller type — each only offers targets that exist on that controller. The type matching the current mode is highlighted. Steam &amp; Lizard are native puck modes (Steam does its own remapping) and aren't configured here.</p>
-      <div id="typeCfgs"></div>
-    </div>
-
-    <div class="card wide hide" id="profilesCard">
-      <h2>Paddle profiles</h2>
-      <p class="note" style="margin-top:0">Four back-paddle layouts for each controller type. The green one is in use; switch from the controller with <strong>paddles + RB / LB</strong>, or press <em>Use this</em>. Each paddle box sits where the paddle is on the controller. Changes save to the puck straight away.</p>
-      <div class="slot-tabs" id="profTabs"></div>
-      <div class="prof-grid" id="profGrid"></div>
-      <p class="note" id="profNote"></p>
-    </div>
-
-    <div class="card wide" id="shortcutsCard">
-      <h2>Controller shortcuts</h2>
-      <p class="note" style="margin-top:0">Everything below works from the controller alone, with no computer. Hold <strong>all four back paddles</strong>, then press the second button. Profile and layout gestures apply to Xbox, Switch and PlayStation modes; Steam and Lizard modes ignore them.</p>
-      <table class="note" style="border-collapse:collapse;width:100%;margin:0">
-        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + RB</strong></td><td>Next paddle profile. The controller buzzes 1–4 times for the profile number.</td></tr>
-        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + LB</strong></td><td>Previous paddle profile.</td></tr>
-        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + Start (+)</strong></td><td>Paddle-assign mode on/off (long buzz). Tap a paddle (1 buzz), then the button it should act as (2 buzzes). The same paddle twice turns it off (3 buzzes). Closes itself after 30 s idle.</td></tr>
-        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + Select (−)</strong></td><td>Flip Nintendo / Xbox button layout. 2 buzzes = Nintendo, 1 = Xbox. Paddles mapped to face buttons flip with it.</td></tr>
-        <tr><td style="padding:3px 12px 3px 0;white-space:nowrap"><strong>Paddles + A / B / X / Y / D-pad</strong></td><td>Switch USB mode (see "Back4 chords" above).</td></tr>
-      </table>
-    </div>
-
-    <div class="card" id="lizardCard" style="display:none">
+    <div class="card wide" id="lizardCard" style="display:none">
       <h2>Lizard / desktop mapping</h2>
       <p class="note" style="margin-top:0">Keyboard, mouse &amp; media bindings for <strong>Lizard (always)</strong> mode — each row maps a controller input to a desktop action. (Steam-mode seamless lizard, when Steam is closed, keeps the built-in default behavior and is not affected by this map.) Edits apply after <strong>Save to device</strong>.</p>
       <div id="lizardList"></div>
@@ -474,15 +619,15 @@
       <p class="note" id="lzStatus" style="margin-top:8px">—</p>
     </div>
 
-    <div class="card" id="backupCard">
+    <div class="card wide" id="backupCard">
       <h2>Backup &amp; clone</h2>
-      <p class="note" style="margin-top:0">Save this puck's controller pairings <em>and</em> every setting (all four paddle profiles per controller type included) to a file, then restore them onto another puck. The other puck becomes a clone — any controller paired to this one connects to it with <strong>no re-pairing</strong>. (Also a plain backup: re-import after a factory erase to get everything back.)</p>
+      <p class="lede">Save pairings and every setting, all paddle profiles included, to a file. Restore it here after a factory erase, or onto another puck to make a clone that your controllers connect to with <strong>no re-pairing</strong>.</p>
       <div class="row" style="margin:0;flex-wrap:wrap">
         <button id="backupExport" class="primary">Export to file…</button>
         <button id="backupImport">Import from file…</button>
         <input type="file" id="backupFile" accept="application/json,.json" style="display:none">
       </div>
-      <p class="note">Import <strong>overwrites</strong> all pairings and settings on the connected puck, then reboots it (~2 s — reconnect after). Tip: pair every controller to one puck, export once, then import onto each spare.</p>
+      <p class="note warnline">Import <strong>replaces</strong> all pairings and settings on the connected puck, then reboots it.</p>
       <div id="cloneSec">
         <h3 class="cloneSub">Clone from an official puck</h3>
         <p class="note" style="margin-top:0">Copy the controller pairings off a Valve puck so those controllers connect to this OpenPuck with <strong>no re-pairing</strong>. Works with one USB port: <b>1.</b> plug in the official puck and read it, <b>2.</b> unplug it, plug in the OpenPuck, Connect, and write. With both plugged in, the browser lists two identical "Steam Controller Puck" entries in step 1 — pick either; if it's the OpenPuck, the panel says so and you pick the other. Existing pairings and settings on the OpenPuck are kept.</p>
@@ -492,7 +637,7 @@
           <button id="cloneForget" class="hide">Forget</button>
         </div>
         <p class="note" id="cloneStatus">—</p>
-        <p class="note"><b>macOS:</b> reading the official puck needs Chrome in <em>System Settings → Privacy &amp; Security → Input Monitoring</em> (restart Chrome after enabling it). The puck's interfaces include a keyboard, so macOS asks for this — the page can only reach the puck's vendor channel, never keystrokes. You can switch it off again afterwards.</p>
+        <details class="more"><summary>Mac permission note</summary><p class="note"><b>macOS:</b> reading the official puck needs Chrome in <em>System Settings → Privacy &amp; Security → Input Monitoring</em> (restart Chrome after enabling it). The puck's interfaces include a keyboard, so macOS asks for this — the page can only reach the puck's vendor channel, never keystrokes. You can switch it off again afterwards.</p></details>
       </div>
     </div>
 
@@ -571,8 +716,9 @@
       </div>
     </div><!-- #tabUpdate -->
 
-    <div id="log"></div>
+    <details class="more logwrap"><summary>Activity log</summary><div id="log"></div></details>
   </div>
+  <footer class="foot">OpenPuck configurator · custom build · <a href="https://github.com/cadenabelcannon-ctrl/openpuck" target="_blank" rel="noopener">source</a> · AGPL-3.0</footer>
 </div>
 
 <!-- blocking modal: covers the whole page while an update is in flight so nothing else can be clicked -->
@@ -3336,6 +3482,31 @@ for(const b of document.querySelectorAll(".modebtn")){
     const msg="Switch to "+MODE_NAMES[m]+"? The copycat will reboot."+(clean?"\n\nNOTE: the game/clean PlayStation modes (and PS3) drop WebUSB + host-wake, so THIS PANEL WILL DISCONNECT and can't reach the device while it's in this mode. To get back, chord on the controller: hold all four back paddles (L4+R4+L5+R5) + A to return to Steam mode. The back4+D-pad chords are how you get back INTO these modes without the panel — check their assignments in the chords card first.":"");
     if(confirm(msg)){ send([0x03, m]); log("mode switch requested — device will reboot"); } };
 }
+
+// ---- page chrome: device menu, on/off switches, welcome screen ----
+(function(){
+  const menu=$("#devMenu");
+  if(menu){
+    document.addEventListener("click",e=>{ if(menu.open && !menu.contains(e.target)) menu.open=false; });
+    document.addEventListener("keydown",e=>{ if(e.key==="Escape" && menu.open){ menu.open=false; menu.querySelector("summary").focus(); } });
+    menu.querySelectorAll(".menu-pop button").forEach(b=>b.addEventListener("click",()=>{ menu.open=false; }));
+  }
+  // every panel on/off button becomes a switch; aria-checked follows the "active" class the panel already sets
+  const sync=b=>b.setAttribute("aria-checked", b.classList.contains("active")?"true":"false");
+  const mo=new MutationObserver(ms=>ms.forEach(m=>sync(m.target)));
+  const togs=[$("#persistMode"),$("#isMachineInternal")];
+  typeEls.forEach(r=>togs.push(r.abSwap,r.pad,r.rumble));
+  for(const b of togs){ if(!b) continue; b.classList.add("tog"); b.setAttribute("role","switch"); sync(b);
+    mo.observe(b,{attributes:true,attributeFilter:["class"]}); }
+  typeEls.forEach(r=>{ [[r.abSwap,"A/B + X/Y swap"],[r.pad,"Trackpad haptics"],[r.rumble,"Rumble"]].forEach(([b,l])=>b&&b.setAttribute("aria-label",l)); });
+  // welcome card only while no puck is connected
+  const panel=$("#panel"), welcome=$("#welcome");
+  const upd=()=>{ welcome.classList.toggle("hide", !panel.classList.contains("hide")); };
+  new MutationObserver(upd).observe(panel,{attributes:true,attributeFilter:["class"]}); upd();
+  const wc=$("#welcomeConnect");
+  if(!("usb" in navigator)){ wc.classList.add("hide"); $("#welcomeNote").innerHTML='<b style="color:var(--bad)">This browser can\'t talk to USB devices.</b> Open this page in Chrome or Edge on a computer.'; }
+  else wc.onclick=()=>{ const c=$("#connectBtn"); if(c) c.click(); };
+})();
 updateUf2UI();
 updateFwGate(); // start gated: stays inert until the first status blob proves the firmware speaks v15+
 if(!("usb" in navigator)) $("#connectBtn").outerHTML='<b style="color:var(--bad)">WebUSB not supported — use Chrome or Edge.</b>';
