@@ -1424,7 +1424,7 @@ async function manualSurveyRf(){
   }
 }
 async function refreshRfStatus(survey=false){
-  if(!dev||isDongle||!rfCapable||rfBusy) return;
+  if(!dev||isDongle||!rfCapable||rfBusy||lizardBusy||(typeof xBusy!=="undefined"&&xBusy)) return;
   rfBusy=true;
   try{
     await waitIdle(); if(!dev) return;
@@ -2460,7 +2460,10 @@ function setV(id,text,cls){ const el=$("#"+id); if(!el) return; el.textContent=t
 async function xchg(fn){
   while(xBusy) await sleep(10);
   xBusy=true;
-  try{ await waitIdle(); if(!dev) return null; return await fn(); }
+  try{
+    await waitIdle();
+    for(let i=0;i<300 && (lizardBusy||rfBusy);i++) await sleep(10);
+    if(!dev) return null; return await fn(); }
   catch(e){ log("exchange err: "+e.message); return null; }
   finally{ xBusy=false; }
 }
@@ -2715,6 +2718,8 @@ function opkAfterBlob(p, mode){
 // change from the controller itself: paddles + RB / LB / Start).
 async function opkPollExtras(){
   pollTick++;
+  // applyBlob may have just started the lizard-map load or an RF status read; one reader at a time
+  if(lizardBusy||rfBusy) return;
   if((opkCaps&CAP_STATS) && pollTick%3===0){
     await send([0x29]); const d=parseStats(await readFrame(0xB5,110)); if(d) applyStats(d);
   }
@@ -3126,6 +3131,8 @@ async function runUpdate(title, confirmText, getImage){
   dfuBusy=true; updateUf2UI(); modalOpen(title);
   polling=false;        // the IN pipe belongs to the update acks now
   await dfuSleep(800);  // let an in-flight status poll finish its read first
+  // and any other reader (lizard-map load, RF status, panel exchange): a reader left pending takes acks
+  for(let i=0;i<500 && (inflight||lizardBusy||rfBusy||(typeof xBusy!=="undefined"&&xBusy));i++) await dfuSleep(10);
   const t0=Date.now(), oldBuild=blobBuildId(lastP);
   try{
     const image=await getImage();
@@ -3631,8 +3638,12 @@ async function lzV2ReadMap(op){
 	const recSize=lzPanelV2()?24:16;
 	let buf=[];
 	let expected=0;
+	const deadline=Date.now()+4000;
 	for(;;){
-		const r=await dev.transferIn(epIn,256);
+		const left=deadline-Date.now();
+		if(left<=0) throw new Error("no lizard-map reply");
+		const r=await Promise.race([dev.transferIn(epIn,256), new Promise(res=>setTimeout(()=>res(null),left))]);
+		if(r===null) throw new Error("no lizard-map reply");
 		if(r.status!=="ok") throw new Error("lizard-map read failed");
 		const d=new Uint8Array(r.data.buffer);
 		for(const x of d) buf.push(x);
@@ -3661,6 +3672,8 @@ async function lzV2Load(){
 	if(lizardBusy||!dev)return;
 	lizardBusy=true;
 	try{
+		// started from inside a status poll: let that poll finish its reads first (the pipe is shared)
+		await waitIdle(); if(!dev) return;
 		const ops=lzV2Ops();
 		lizardBindings=await lzV2ReadMap(lzPanelV2()?ops.dump:0x11);
 		lzV2Render();
