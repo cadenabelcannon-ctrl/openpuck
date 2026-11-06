@@ -170,6 +170,51 @@ uint8_t paddleProfileActive(uint8_t et)
 	return et < ET_COUNT ? s_st.active[et] : 0xFF;
 }
 
+bool paddleProfileGet(uint8_t et, uint8_t profile, uint8_t out[4])
+{
+	if (et >= ET_COUNT || profile >= PP_COUNT)
+		return false;
+	memcpy(out,
+	       profile == s_st.active[et] ? g_type[et].back :
+					    s_st.back[et][profile],
+	       4);
+	return true;
+}
+
+bool paddleProfileSet(uint8_t et, uint8_t profile, const uint8_t codes[4])
+{
+	if (et >= ET_COUNT || profile >= PP_COUNT)
+		return false;
+	for (int i = 0; i < 4; i++)
+		if (codes[i] > PP_CODE_MAX)
+			return false;
+	memcpy(s_st.back[et][profile], codes, 4);
+	if (profile == s_st.active[et]) {
+		memcpy(g_type[et].back, codes, 4);
+		if (et == g_etype)
+			applyActiveType();
+	}
+	s_storeDirty = true;
+	return true;
+}
+
+bool paddleProfileSelect(uint8_t et, uint8_t profile)
+{
+	if (et >= ET_COUNT || profile >= PP_COUNT)
+		return false;
+	const uint8_t a = s_st.active[et];
+	if (a == profile)
+		return true;
+	memcpy(s_st.back[et][a], g_type[et].back,
+	       4); // keep panel edits to the outgoing one
+	s_st.active[et] = profile;
+	memcpy(g_type[et].back, s_st.back[et][profile], 4);
+	if (et == g_etype)
+		applyActiveType();
+	s_storeDirty = true;
+	return true;
+}
+
 static void switchProfile(uint8_t slot, int dir)
 {
 	uint8_t et = g_etype;

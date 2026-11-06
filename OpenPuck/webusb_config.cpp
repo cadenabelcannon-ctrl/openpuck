@@ -14,6 +14,8 @@
 #include "usb_tx.h"
 #include "usb_mount.h" // modeSwitchReboot()
 #include "xinput_auth.h"
+#include "paddle_profiles.h"
+#include "link_stats.h"
 #include <Arduino.h>
 #include <string.h>
 
@@ -105,7 +107,16 @@ static bool boardCommand(uint8_t op)
 //                [v21: p[53] rumble strength as PERCENT/2 (field 22, revived); p[195] rumble style
 //                 (field 39, RUMBLE_STYLE_* in haptics.h)]
 //                [v22: p[196] RF recovery status/journal transport capability marker (0x52)]
-#define WB_PAYLEN 195
+//                [p[197] custom-build capabilities, WB_CAP_* below (absent on upstream builds)]
+#define WB_PAYLEN 196
+// Capabilities of this build beyond upstream, so the panel only offers what the puck can do.
+#define WB_CAP_PROFILES 0x01 // 0x26/0x27/0x28 + 0xB4 frame: all paddle profiles
+#define WB_CAP_LINKSTATS \
+	0x02 // 0x29/0x2A + 0xB5 frame: stutters and the channel-move log
+#define WB_CAP_PAD_DPAD 0x04 // trackpad map value PS_DPAD
+#define WB_CAP_FLIP 0x08 // back4 + Select layout flip
+#define WB_CAPS \
+	(WB_CAP_PROFILES | WB_CAP_LINKSTATS | WB_CAP_PAD_DPAD | WB_CAP_FLIP)
 // The blob send is drop-on-full (never blocks loop), so the vendor TX FIFO MUST be able to hold a whole blob
 // -- otherwise tud_vendor_write_available() never reaches the frame size and EVERY frame is dropped (blank
 // panel / stale mappings). The Makefile sets -DCFG_TUD_VENDOR_TX_BUFSIZE=256; guard it here so a build without
@@ -340,6 +351,7 @@ static void webusbSendBlob()
 	// v22: append-only RF recovery transport capability. p[181] remains the
 	// upstream Steam Machine toggle; older RF builds used that byte for 0x52.
 	p[196] = 0x52;
+	p[197] = WB_CAPS;
 	// CRITICAL: usb_web.write() SPINS (`while (remain && _connected) yield();`) until the IN FIFO drains or the
 	// panel disconnects. If the panel holds the WebUSB interface open but stops reading its IN endpoint -- a
 	// backgrounded tab, or the host briefly not servicing transferIn under load -- the FIFO never empties and
@@ -570,6 +582,76 @@ static bool webusbSendRfStatus()
 	return true;
 }
 
+// Paddle profiles (0xB4) and connection quality (0xB5). Unlike the blob, these are BUILT in loop context
+// (webusbPoll), where the data lives, into a buffer the usbd task only reads once the ready flag is set; loop
+// only writes the buffer while the flag is clear. So the SOF drain never sees a half-updated frame.
+//   0xB4: [ver=1][PP_COUNT][ET_COUNT][active x ET_COUNT][codes: et-major, profile, paddle (L4 R4 L5 R5)]
+//   0xB5: link_stats.h payload --
+//         [ver=1][channel][LSP_* flags][futile][recent hitches][seconds since reset u32]
+//         per slot x4: [bit0 bonded, bit1 up][rssi |dBm|][connected s of last 60]
+//                      [stutters 60 s u16][freezes 60 s u16][worst gap 60 s ms u16][delivery permille u16]
+//                      [stutters total u32][freezes total u32][connected s total u32][worst gap total u16]
+//         [log count] + LS_LOG_MAX x [age s u16][from][to][cause | 0x80 ok][before u16][before conn s]
+//                      [after u16 (0xFFFF pending, 0xFFFE none)][after conn s]   (newest first)
+// Little-endian throughout.
+#define WB_PROF_LEN (3u + ET_COUNT + ET_COUNT * PP_COUNT * 4u)
+static uint8_t g_profFrame[2 + WB_PROF_LEN];
+static uint8_t g_statsFrame[2 + LS_FRAME_LEN];
+static volatile bool g_profReady = false, g_statsReady = false;
+static_assert(CFG_TUD_VENDOR_TX_BUFSIZE >= 2 + LS_FRAME_LEN,
+	      "0xB5 frame must fit the vendor TX FIFO");
+
+static void webusbBuildProfiles()
+{
+	if (g_profReady)
+		return; // the previous one is still queued: it's current enough
+	uint8_t *q = g_profFrame;
+	*q++ = 0xB4;
+	*q++ = (uint8_t)WB_PROF_LEN;
+	*q++ = 1;
+	*q++ = PP_COUNT;
+	*q++ = ET_COUNT;
+	for (uint8_t et = 0; et < ET_COUNT; et++)
+		*q++ = paddleProfileActive(et);
+	for (uint8_t et = 0; et < ET_COUNT; et++)
+		for (uint8_t pr = 0; pr < PP_COUNT; pr++) {
+			paddleProfileGet(et, pr, q);
+			q += 4;
+		}
+	__DMB();
+	g_profReady = true;
+}
+
+static void webusbBuildStats()
+{
+	if (g_statsReady)
+		return;
+	LinkStatsPolicy pol;
+	rfHitchPolicyState(&pol);
+	g_statsFrame[0] = 0xB5;
+	g_statsFrame[1] = (uint8_t)LS_FRAME_LEN;
+	linkStatsBuildFrame(g_statsFrame + 2, LS_FRAME_LEN, millis(), pol);
+	__DMB();
+	g_statsReady = true;
+}
+
+// usbd task: send a ready frame once the FIFO has room for all of it (never a partial frame).
+static void webusbSendReady(volatile bool &ready, const uint8_t *f, size_t len)
+{
+	if (!ready)
+		return;
+	if (!usb_web.connected()) {
+		// nobody to answer: drop it, or a stale frame would greet the next panel connection
+		ready = false;
+		return;
+	}
+	if (tud_vendor_write_available() < len)
+		return; // try again next SOF
+	usb_web.write(f, len);
+	usb_web.flush();
+	ready = false;
+}
+
 static void webusbSofDrain(void)
 {
 	// If loop() has stopped beating, it's wedged -- keep pushing the blob (which carries the live stuck stage)
@@ -601,6 +683,8 @@ static void webusbSofDrain(void)
 	}
 	if (g_rfStatusRequest && webusbSendRfStatus())
 		g_rfStatusRequest = false;
+	webusbSendReady(g_profReady, g_profFrame, sizeof g_profFrame);
+	webusbSendReady(g_statsReady, g_statsFrame, sizeof g_statsFrame);
 }
 // ---- live wedge reporter (0xA9) --------------------------------------------------------------------------
 // THE one channel that survives a loop() wedge on boards that wipe .noinit/GPREGRET across the watchdog reset
@@ -811,7 +895,7 @@ void webusbPoll()
 			// 0x16 = test rumble (v21); extend this range whenever a new opcode is added, or the
 			// parser drops it as garbage and the handler below never runs.
 			if ((op < 0x01 || op > 0x1A) &&
-			    (op < 0x20 || op > 0x25)) { // resync: drop one byte
+			    (op < 0x20 || op > 0x2A)) { // resync: drop one byte
 				memmove(buf, buf + 1, --n);
 				continue;
 			}
@@ -838,6 +922,8 @@ void webusbPoll()
 					       2 :
 				(op == 0x0A) ? 4 :
 				(op == 0x25) ? 5 :
+				(op == 0x27) ? 7 :
+				(op == 0x28) ? 3 :
 				(op == 0x20) ? 9 :
 				(op == 0x21) ? (uint8_t)(6 + (n >= 6 ? buf[5] :
 								       0)) :
@@ -852,6 +938,28 @@ void webusbPoll()
 			if (op == 0x01) {
 				g_blobRequest =
 					true; // sent from the usbd task (webusbSofDrain)
+			}
+			// 0x26: all paddle profiles (0xB4). 0x27 [et][profile][L4][R4][L5][R5]: replace one profile.
+			// 0x28 [et][profile]: make it active. Edits persist at once (the panel is the one asking) and
+			// reply with a fresh 0xB4 so the panel shows what the puck now holds.
+			else if (op == 0x26) {
+				webusbBuildProfiles();
+			} else if (op == 0x27 || op == 0x28) {
+				bool ok = op == 0x27 ?
+						  paddleProfileSet(buf[1],
+								   buf[2],
+								   buf + 3) :
+						  paddleProfileSelect(buf[1],
+								      buf[2]);
+				if (ok)
+					saveCfg();
+				webusbBuildProfiles();
+			}
+			// 0x29: connection quality (0xB5). 0x2A: zero its counters and move log, then reply.
+			else if (op == 0x29 || op == 0x2A) {
+				if (op == 0x2A)
+					linkStatsReset(millis());
+				webusbBuildStats();
 			}
 			// 0x09: export all bond slots (clone backup). One 0xA7 frame, sent from the usbd task.
 			else if (op == 0x09) {

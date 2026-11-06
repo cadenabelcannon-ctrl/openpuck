@@ -31,3 +31,13 @@ void paddleProfilesOnInput(uint8_t slot, uint8_t *rep);
 void paddleProfilesSaveIfDirty();
 // active profile index (0..PP_COUNT-1) for an emulated type, 0xFF for an invalid type
 uint8_t paddleProfileActive(uint8_t et);
+
+// ---- WebUSB panel (loop context, like everything above) ----
+// Highest button code a paddle may be set to (see the code list in paddle_profiles.cpp).
+#define PP_CODE_MAX 20
+// One profile's four paddle codes (L4, R4, L5, R5). The active profile reads the live g_type[et].back.
+bool paddleProfileGet(uint8_t et, uint8_t profile, uint8_t out[4]);
+// Replace one profile. Editing the active profile edits the live layout too. The caller persists (saveCfg()).
+bool paddleProfileSet(uint8_t et, uint8_t profile, const uint8_t codes[4]);
+// Make a profile active for a type (no buzz: nobody is holding the controller). The caller persists.
+bool paddleProfileSelect(uint8_t et, uint8_t profile);
